@@ -1,3 +1,4 @@
+import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category, CategoryCreateCommand } from "../category.entity";
 
 describe("Category Entity", () => {
@@ -7,7 +8,7 @@ describe("Category Entity", () => {
 
       const category = Category.create(command);
 
-      expect(category.id).toBe("id");
+      expect(category.categoryId).toBeInstanceOf(Uuid);
       expect(category.name).toBe(command.name);
       expect(category.description).toBeNull();
       expect(category.isActive).toBeTruthy();
@@ -23,7 +24,7 @@ describe("Category Entity", () => {
 
       const category = Category.create(command);
 
-      expect(category.id).toBe("id");
+      expect(category.categoryId).toBeInstanceOf(Uuid);
       expect(category.name).toBe(command.name);
       expect(category.description).toBe(command.description);
       expect(category.isActive).toBeFalsy();
