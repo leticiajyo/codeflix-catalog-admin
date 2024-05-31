@@ -2,6 +2,24 @@ import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
 import { Category, CategoryCreateCommand } from "../category.entity";
 
 describe("Category Entity", () => {
+  let validateSpy: jest.SpyInstance;
+
+  beforeEach(() => {
+    validateSpy = jest.spyOn(Category.prototype as any, "validate");
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
+  describe("constructor", () => {
+    it("should validate entity", () => {
+      Category.create({ name: "movie" });
+
+      expect(validateSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe("create", () => {
     it("should create category with default parameters", () => {
       const command: CategoryCreateCommand = { name: "movie" };
@@ -13,6 +31,8 @@ describe("Category Entity", () => {
       expect(category.description).toBeNull();
       expect(category.isActive).toBeTruthy();
       expect(category.createdAt).toBeInstanceOf(Date);
+
+      expect(validateSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should create category with given params", () => {
@@ -29,6 +49,8 @@ describe("Category Entity", () => {
       expect(category.description).toBe(command.description);
       expect(category.isActive).toBeFalsy();
       expect(category.createdAt).toBeInstanceOf(Date);
+
+      expect(validateSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -40,6 +62,8 @@ describe("Category Entity", () => {
       category.changeName(newName);
 
       expect(category.name).toBe(newName);
+
+      expect(validateSpy).toHaveBeenCalledTimes(2);
     });
   });
 
