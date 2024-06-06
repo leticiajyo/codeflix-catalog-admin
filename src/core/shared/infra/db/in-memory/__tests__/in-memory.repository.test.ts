@@ -15,7 +15,7 @@ class StubEntity extends Entity {
 
   toJSON() {
     return {
-      entity_id: this.entityId.id,
+      entityId: this.entityId.id,
       name: this.name,
     };
   }
