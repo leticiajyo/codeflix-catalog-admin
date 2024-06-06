@@ -79,11 +79,11 @@ export class Category extends Entity {
 
   toJSON() {
     return {
-      category_id: this.categoryId.id,
+      categoryId: this.categoryId.id,
       name: this.name,
       description: this.description,
-      is_active: this.isActive,
-      created_at: this.createdAt,
+      isActive: this.isActive,
+      createdAt: this.createdAt,
     };
   }
 }
