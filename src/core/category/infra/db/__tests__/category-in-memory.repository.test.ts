@@ -15,9 +15,9 @@ describe("Category In Memory Repository", () => {
 
   describe("search", () => {
     it("should filter items", async () => {
-      const entity1 = Category.create({ name: "name" });
-      const entity2 = Category.create({ name: "NAME" });
-      const entity3 = Category.create({ name: "other" });
+      const entity1 = Category.fake().oneCategory().withName("name").build();
+      const entity2 = Category.fake().oneCategory().withName("NAME").build();
+      const entity3 = Category.fake().oneCategory().withName("other").build();
       repository.items = [entity1, entity2, entity3];
 
       const searchResult = await repository.search(
@@ -28,8 +28,8 @@ describe("Category In Memory Repository", () => {
     });
 
     it("should sort items based on given params", async () => {
-      const entity1 = Category.create({ name: "name 1" });
-      const entity2 = Category.create({ name: "name 2" });
+      const entity1 = Category.fake().oneCategory().withName("name 1").build();
+      const entity2 = Category.fake().oneCategory().withName("name 2").build();
       repository.items = [entity1, entity2];
 
       const searchResult = await repository.search(
@@ -40,20 +40,17 @@ describe("Category In Memory Repository", () => {
     });
 
     it("should sort by createdAt when sort param is null", async () => {
-      const entity1 = new Category({
-        categoryId: new Uuid(),
-        name: "name 1",
-        description: null,
-        isActive: true,
-        createdAt: new Date(new Date().getTime() + 100),
-      });
-      const entity2 = new Category({
-        categoryId: new Uuid(),
-        name: "name 2",
-        description: null,
-        isActive: true,
-        createdAt: new Date(new Date().getTime() + 200),
-      });
+      const entity1 = Category.fake()
+        .oneCategory()
+        .withName("name 1")
+        .withCreatedAt(new Date("2024-06-06T08:00:00"))
+        .build();
+      const entity2 = Category.fake()
+        .oneCategory()
+        .withName("name 2")
+        .withCreatedAt(new Date("2024-07-06T08:00:00"))
+        .build();
+
       repository.items = [entity1, entity2];
 
       const searchResult = await repository.search(new SearchParams());
