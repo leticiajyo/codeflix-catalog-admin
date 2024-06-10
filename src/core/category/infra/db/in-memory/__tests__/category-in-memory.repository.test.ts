@@ -1,9 +1,9 @@
 import {
   SearchParams,
   SortDirection,
-} from "../../../../shared/domain/repository/search-params";
-import { Uuid } from "../../../../shared/domain/value-objects/uuid.vo";
-import { Category } from "../../../domain/category.entity";
+} from "../../../../../shared/domain/repository/search-params";
+import { Uuid } from "../../../../../shared/domain/value-objects/uuid.vo";
+import { Category } from "../../../../domain/category.entity";
 import { CategoryInMemoryRepository } from "../category-in-memory.repository";
 
 describe("Category In Memory Repository", () => {
