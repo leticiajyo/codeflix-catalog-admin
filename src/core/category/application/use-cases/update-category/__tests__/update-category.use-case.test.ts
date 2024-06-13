@@ -1,10 +1,10 @@
-import { NotFoundError } from "../../../shared/domain/errors/not-found.error";
-import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
-import { setupSequelize } from "../../../shared/infra/testing/sequelize.helper";
-import { Category } from "../../domain/category.entity";
-import { CategorySequelizeRepository } from "../../infra/db/sequelize/category-sequelize.repository";
-import { CategoryModel } from "../../infra/db/sequelize/category.model";
-import { UpdateCategoryUseCase } from "../update-category.use-case";
+import { NotFoundError } from "../../../../../shared/domain/errors/not-found.error";
+import { Uuid } from "../../../../../shared/domain/value-objects/uuid.vo";
+import { setupSequelize } from "../../../../../shared/infra/testing/sequelize.helper";
+import { Category } from "../../../../domain/category.entity";
+import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category-sequelize.repository";
+import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
+import { UpdateCategoryUseCase } from "../../../use-cases/update-category/update-category.use-case";
 
 describe("Update Category Use Case", () => {
   let useCase: UpdateCategoryUseCase;

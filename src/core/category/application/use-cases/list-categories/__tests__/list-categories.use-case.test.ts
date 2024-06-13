@@ -1,9 +1,9 @@
-import { SortDirection } from "../../../shared/domain/repository/search-params";
-import { setupSequelize } from "../../../shared/infra/testing/sequelize.helper";
-import { Category } from "../../domain/category.entity";
-import { CategorySequelizeRepository } from "../../infra/db/sequelize/category-sequelize.repository";
-import { CategoryModel } from "../../infra/db/sequelize/category.model";
-import { CategoryOutputMapper } from "../common/category.output";
+import { SortDirection } from "../../../../../shared/domain/repository/search-params";
+import { setupSequelize } from "../../../../../shared/infra/testing/sequelize.helper";
+import { Category } from "../../../../domain/category.entity";
+import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category-sequelize.repository";
+import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
+import { CategoryOutputMapper } from "../../../common/category.output";
 import { ListCategoriesUseCase } from "../list-categories.use-case";
 
 describe("List CategoriesUse Case", () => {
