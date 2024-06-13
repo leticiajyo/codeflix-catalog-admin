@@ -16,6 +16,14 @@ describe("Create Category Use Case", () => {
   });
 
   describe("execute", () => {
+    it("should throw an error when entity is not valid", async () => {
+      const input = { name: "t".repeat(101) };
+
+      await expect(() => useCase.execute(input)).rejects.toThrow(
+        "Entity Validation Error"
+      );
+    });
+
     it("should create a category", async () => {
       const input = {
         name: "test",

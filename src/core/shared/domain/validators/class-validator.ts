@@ -1,18 +1,23 @@
 import { validateSync } from "class-validator";
-import { FieldsErrors, IClassValidator } from "./class-validator.interface";
+import { IClassValidator } from "./class-validator.interface";
+import { Notification } from "./notification";
 
 export abstract class ClassValidator<PropsValidated extends object>
   implements IClassValidator<PropsValidated>
 {
-  errors: FieldsErrors | null = null;
+  validate(
+    notification: Notification,
+    data: PropsValidated,
+    groups: string[]
+  ): boolean {
+    const errors = validateSync(data, { groups });
 
-  validate(data: PropsValidated): boolean {
-    const errors = validateSync(data);
     if (errors.length) {
-      this.errors = {};
       for (const error of errors) {
         const field = error.property;
-        this.errors[field] = Object.values(error.constraints!);
+        Object.values(error.constraints!).forEach((message) => {
+          notification.addError(message, field);
+        });
       }
     }
     return !errors.length;

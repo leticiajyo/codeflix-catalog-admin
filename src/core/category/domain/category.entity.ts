@@ -34,7 +34,7 @@ export class Category extends Entity {
     this.isActive = props.isActive;
     this.createdAt = props.createdAt;
 
-    this.validate(this);
+    this.validate();
   }
 
   get entityId(): ValueObject {
@@ -55,7 +55,7 @@ export class Category extends Entity {
 
   changeName(name: string): void {
     this.name = name;
-    this.validate(this);
+    this.validate();
   }
 
   changeDescription(description: string): void {
@@ -70,12 +70,9 @@ export class Category extends Entity {
     this.isActive = false;
   }
 
-  private validate(entity: Category) {
+  private validate() {
     const validator = new CategoryValidator();
-    const isValid = validator.validate(entity);
-    if (!isValid) {
-      throw new EntityValidationError(validator.errors!);
-    }
+    return validator.validate(this.notification, this);
   }
 
   toJSON() {

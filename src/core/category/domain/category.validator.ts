@@ -1,18 +1,23 @@
 import { MaxLength } from "class-validator";
 import { Category } from "./category.entity";
 import { ClassValidator } from "../../shared/domain/validators/class-validator";
+import { Notification } from "../../shared/domain/validators/notification";
 
 export class CategoryRules {
   @MaxLength(100)
   name!: string;
 
-  constructor({ name }: Category) {
-    Object.assign(this, { name });
+  constructor(entity: Category) {
+    Object.assign(this, entity);
   }
 }
 
 export class CategoryValidator extends ClassValidator<CategoryRules> {
-  validate(entity: Category) {
-    return super.validate(new CategoryRules(entity));
+  validate(
+    notification: Notification,
+    data: Category,
+    groups: string[] = []
+  ): boolean {
+    return super.validate(notification, new CategoryRules(data), groups);
   }
 }

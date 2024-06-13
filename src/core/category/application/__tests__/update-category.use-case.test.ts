@@ -26,6 +26,18 @@ describe("Update Category Use Case", () => {
       ).rejects.toThrow(new NotFoundError(uuid.id, Category));
     });
 
+    it("should throw an error when entity is not valid", async () => {
+      const entity = Category.fake().oneCategory().build();
+      repository.insert(entity);
+
+      await expect(() =>
+        useCase.execute({
+          id: entity.categoryId.id,
+          name: "t".repeat(101),
+        })
+      ).rejects.toThrow("Entity Validation Error");
+    });
+
     it("should update a category", async () => {
       const entity = Category.fake().oneCategory().build();
       repository.insert(entity);
