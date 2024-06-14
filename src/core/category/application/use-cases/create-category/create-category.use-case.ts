@@ -6,12 +6,7 @@ import {
   CategoryOutput,
   CategoryOutputMapper,
 } from "../../common/category.output";
-
-export type CreateCategoryInput = {
-  name: string;
-  description?: string;
-  isActive?: boolean;
-};
+import { CreateCategoryInput } from "./create-category.input";
 
 export type CreateCategoryOutput = CategoryOutput;
 
