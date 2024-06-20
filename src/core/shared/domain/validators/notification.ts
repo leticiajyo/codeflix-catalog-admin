@@ -1,4 +1,4 @@
-import { FieldsErrors } from "./class-validator.interface";
+import { FieldsErrors } from './class-validator.interface';
 
 export class Notification {
   errors = new Map<string, string[] | string>();
@@ -40,7 +40,7 @@ export class Notification {
   toJSON() {
     const errors: FieldsErrors = [];
     this.errors.forEach((value, key) => {
-      if (typeof value === "string") {
+      if (typeof value === 'string') {
         errors.push(value);
       } else {
         errors.push({ [key]: value });

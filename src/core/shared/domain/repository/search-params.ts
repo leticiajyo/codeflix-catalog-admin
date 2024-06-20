@@ -1,8 +1,8 @@
-import { ValueObject } from "../value-object";
+import { ValueObject } from '../value-object';
 
 export enum SortDirection {
-  ASC = "asc",
-  DESC = "desc",
+  ASC = 'asc',
+  DESC = 'desc',
 }
 
 export type SearchParamsProps<Filter = string> = {
@@ -54,7 +54,7 @@ export class SearchParams<Filter = string> extends ValueObject {
   }
 
   private sanitizeSortDirection(
-    value: SortDirection | undefined | null
+    value: SortDirection | undefined | null,
   ): SortDirection | null {
     if (!this.sort || !value) {
       return null;

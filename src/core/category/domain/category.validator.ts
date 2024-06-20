@@ -1,7 +1,7 @@
-import { MaxLength } from "class-validator";
-import { Category } from "./category.entity";
-import { ClassValidator } from "../../shared/domain/validators/class-validator";
-import { Notification } from "../../shared/domain/validators/notification";
+import { MaxLength } from 'class-validator';
+import { Category } from './category.entity';
+import { ClassValidator } from '../../shared/domain/validators/class-validator';
+import { Notification } from '../../shared/domain/validators/notification';
 
 export class CategoryRules {
   @MaxLength(100)
@@ -16,7 +16,7 @@ export class CategoryValidator extends ClassValidator<CategoryRules> {
   validate(
     notification: Notification,
     data: Category,
-    groups: string[] = []
+    groups: string[] = [],
   ): boolean {
     return super.validate(notification, new CategoryRules(data), groups);
   }

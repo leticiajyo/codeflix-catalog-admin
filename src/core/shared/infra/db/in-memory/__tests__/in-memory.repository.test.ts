@@ -1,7 +1,7 @@
-import { Entity } from "../../../../domain/entity";
-import { NotFoundError } from "../../../../domain/errors/not-found.error";
-import { Uuid } from "../../../../domain/value-objects/uuid.vo";
-import { InMemoryRepository } from "../in-memory.repository";
+import { Entity } from '../../../../domain/entity';
+import { NotFoundError } from '../../../../domain/errors/not-found.error';
+import { Uuid } from '../../../../domain/value-objects/uuid.vo';
+import { InMemoryRepository } from '../in-memory.repository';
 
 class StubEntity extends Entity {
   entityId: Uuid;
@@ -27,16 +27,16 @@ class StubInMemoryRepository extends InMemoryRepository<StubEntity, Uuid> {
   }
 }
 
-describe("In Memory Repository", () => {
+describe('In Memory Repository', () => {
   let repository: StubInMemoryRepository;
 
   beforeEach(() => {
     repository = new StubInMemoryRepository();
   });
 
-  describe("insert", () => {
-    it("should insert an entity", async () => {
-      const entity = new StubEntity({ name: "test" });
+  describe('insert', () => {
+    it('should insert an entity', async () => {
+      const entity = new StubEntity({ name: 'test' });
 
       await repository.insert(entity);
 
@@ -45,10 +45,10 @@ describe("In Memory Repository", () => {
     });
   });
 
-  describe("bulkInsert", () => {
-    it("should bulk insert entities", async () => {
-      const entity1 = new StubEntity({ name: "test" });
-      const entity2 = new StubEntity({ name: "test" });
+  describe('bulkInsert', () => {
+    it('should bulk insert entities', async () => {
+      const entity1 = new StubEntity({ name: 'test' });
+      const entity2 = new StubEntity({ name: 'test' });
 
       await repository.bulkInsert([entity1, entity2]);
 
@@ -58,36 +58,36 @@ describe("In Memory Repository", () => {
     });
   });
 
-  describe("update", () => {
-    it("should update an entity", async () => {
-      const entity = new StubEntity({ name: "test" });
+  describe('update', () => {
+    it('should update an entity', async () => {
+      const entity = new StubEntity({ name: 'test' });
 
       await repository.insert(entity);
 
       const updatedEntity = new StubEntity({
         entityId: entity.entityId,
-        name: "updated",
+        name: 'updated',
       });
 
       await repository.update(updatedEntity);
 
       expect(repository.items[0].toJSON()).toStrictEqual(
-        updatedEntity.toJSON()
+        updatedEntity.toJSON(),
       );
     });
 
-    it("should throw an error when entity is not found", async () => {
-      const entity = new StubEntity({ name: "test" });
+    it('should throw an error when entity is not found', async () => {
+      const entity = new StubEntity({ name: 'test' });
 
       await expect(repository.update(entity)).rejects.toThrow(
-        new NotFoundError(entity.entityId, StubEntity)
+        new NotFoundError(entity.entityId, StubEntity),
       );
     });
   });
 
-  describe("delete", () => {
-    it("should delete an entity", async () => {
-      const entity = new StubEntity({ name: "test" });
+  describe('delete', () => {
+    it('should delete an entity', async () => {
+      const entity = new StubEntity({ name: 'test' });
 
       await repository.insert(entity);
 
@@ -96,18 +96,18 @@ describe("In Memory Repository", () => {
       expect(repository.items).toHaveLength(0);
     });
 
-    it("should throw an error when entity is not found", async () => {
-      const entity = new StubEntity({ name: "test" });
+    it('should throw an error when entity is not found', async () => {
+      const entity = new StubEntity({ name: 'test' });
 
       await expect(repository.delete(entity.entityId)).rejects.toThrow(
-        new NotFoundError(entity.entityId, StubEntity)
+        new NotFoundError(entity.entityId, StubEntity),
       );
     });
   });
 
-  describe("findById", () => {
-    it("should return retrieved entity", async () => {
-      const entity = new StubEntity({ name: "test" });
+  describe('findById', () => {
+    it('should return retrieved entity', async () => {
+      const entity = new StubEntity({ name: 'test' });
 
       await repository.insert(entity);
 
@@ -116,17 +116,17 @@ describe("In Memory Repository", () => {
       expect(retrievedEntity!.toJSON()).toStrictEqual(entity.toJSON());
     });
 
-    it("should return null if entity is not found", async () => {
+    it('should return null if entity is not found', async () => {
       const retrievedEntity = await repository.findById(new Uuid());
 
       expect(retrievedEntity).toBeNull;
     });
   });
 
-  describe("findAll", () => {
-    it("should return all entities", async () => {
-      const entity1 = new StubEntity({ name: "test" });
-      const entity2 = new StubEntity({ name: "test" });
+  describe('findAll', () => {
+    it('should return all entities', async () => {
+      const entity1 = new StubEntity({ name: 'test' });
+      const entity2 = new StubEntity({ name: 'test' });
 
       await repository.bulkInsert([entity1, entity2]);
 

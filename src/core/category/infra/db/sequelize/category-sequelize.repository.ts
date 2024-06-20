@@ -1,17 +1,17 @@
-import { Op } from "sequelize";
-import { NotFoundError } from "../../../../shared/domain/errors/not-found.error";
-import { Uuid } from "../../../../shared/domain/value-objects/uuid.vo";
-import { Category } from "../../../domain/category.entity";
+import { Op } from 'sequelize';
+import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
+import { Uuid } from '../../../../shared/domain/value-objects/uuid.vo';
+import { Category } from '../../../domain/category.entity';
 import {
   CategorySearchParams,
   CategorySearchResult,
   ICategoryRepository,
-} from "../../../domain/category.repository";
-import { CategoryModel } from "./category.model";
-import { CategoryModelMapper } from "./category.mapper";
+} from '../../../domain/category.repository';
+import { CategoryModel } from './category.model';
+import { CategoryModelMapper } from './category.mapper';
 
 export class CategorySequelizeRepository implements ICategoryRepository {
-  sortableFields: string[] = ["name", "createdAt"];
+  sortableFields: string[] = ['name', 'createdAt'];
 
   constructor(private categoryModel: typeof CategoryModel) {}
 
@@ -22,7 +22,7 @@ export class CategorySequelizeRepository implements ICategoryRepository {
 
   async bulkInsert(entities: Category[]): Promise<void> {
     const models = entities.map((entity) =>
-      CategoryModelMapper.toModel(entity).toJSON()
+      CategoryModelMapper.toModel(entity).toJSON(),
     );
     await this.categoryModel.bulkCreate(models);
   }
@@ -83,7 +83,7 @@ export class CategorySequelizeRepository implements ICategoryRepository {
       props.sortDirection &&
       this.sortableFields.includes(props.sort)
         ? { order: [[props.sort, props.sortDirection]] }
-        : { order: [["createdAt", "desc"]] }),
+        : { order: [['createdAt', 'desc']] }),
       offset,
       limit,
     });

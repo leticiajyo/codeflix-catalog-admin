@@ -2,11 +2,11 @@ import {
   SearchParams,
   SearchParamsProps,
   SortDirection,
-} from "../search-params";
+} from '../search-params';
 
-describe("Search Params Value Object", () => {
-  describe("constructor", () => {
-    it("should build search params with default values", () => {
+describe('Search Params Value Object', () => {
+  describe('constructor', () => {
+    it('should build search params with default values', () => {
       const searchParams = new SearchParams();
 
       expect(searchParams.page).toBe(1);
@@ -16,7 +16,7 @@ describe("Search Params Value Object", () => {
       expect(searchParams.filter).toBe(null);
     });
 
-    describe("should sanitize page field", () => {
+    describe('should sanitize page field', () => {
       [
         { props: { page: undefined } as SearchParamsProps, expected: 1 },
         { props: { page: {} } as SearchParamsProps, expected: 1 },
@@ -33,7 +33,7 @@ describe("Search Params Value Object", () => {
       });
     });
 
-    describe("should sanitize perPage field", () => {
+    describe('should sanitize perPage field', () => {
       [
         { props: { perPage: undefined } as SearchParamsProps, expected: 15 },
         { props: { perPage: {} } as SearchParamsProps, expected: 15 },
@@ -50,12 +50,12 @@ describe("Search Params Value Object", () => {
       });
     });
 
-    describe("should sanitize sort field", () => {
+    describe('should sanitize sort field', () => {
       [
         { props: { sort: undefined } as SearchParamsProps, expected: null },
         { props: { sort: null } as SearchParamsProps, expected: null },
-        { props: { sort: "" } as SearchParamsProps, expected: null },
-        { props: { sort: "field" } as SearchParamsProps, expected: "field" },
+        { props: { sort: '' } as SearchParamsProps, expected: null },
+        { props: { sort: 'field' } as SearchParamsProps, expected: 'field' },
       ].forEach((test) => {
         it(`when sort is ${JSON.stringify(test.props.sort)}`, () => {
           const searchParams = new SearchParams(test.props);
@@ -64,7 +64,7 @@ describe("Search Params Value Object", () => {
       });
     });
 
-    describe("should sanitize sortDirection field", () => {
+    describe('should sanitize sortDirection field', () => {
       it(`when sort is not given`, () => {
         const props = {
           sort: null,
@@ -79,25 +79,25 @@ describe("Search Params Value Object", () => {
       [
         {
           props: {
-            sort: "field",
+            sort: 'field',
             sortDirection: undefined,
           } as SearchParamsProps,
           expected: null,
         },
         {
-          props: { sort: "field", sortDirection: null } as SearchParamsProps,
+          props: { sort: 'field', sortDirection: null } as SearchParamsProps,
           expected: null,
         },
         {
           props: {
-            sort: "field",
+            sort: 'field',
             sortDirection: SortDirection.ASC,
           } as SearchParamsProps,
           expected: SortDirection.ASC,
         },
         {
           props: {
-            sort: "field",
+            sort: 'field',
             sortDirection: SortDirection.DESC,
           } as SearchParamsProps,
           expected: SortDirection.DESC,
@@ -110,12 +110,12 @@ describe("Search Params Value Object", () => {
       });
     });
 
-    describe("should sanitize filter field", () => {
+    describe('should sanitize filter field', () => {
       [
         { props: { filter: undefined } as SearchParamsProps, expected: null },
         { props: { filter: null } as SearchParamsProps, expected: null },
-        { props: { filter: "" } as SearchParamsProps, expected: null },
-        { props: { filter: "field" } as SearchParamsProps, expected: "field" },
+        { props: { filter: '' } as SearchParamsProps, expected: null },
+        { props: { filter: 'field' } as SearchParamsProps, expected: 'field' },
       ].forEach((test) => {
         it(`when filter is ${JSON.stringify(test.props.filter)}`, () => {
           const searchParams = new SearchParams(test.props);

@@ -1,13 +1,13 @@
-import { CategoryModel } from "../category.model";
-import { CategorySequelizeRepository } from "../category-sequelize.repository";
-import { Category } from "../../../../domain/category.entity";
-import { Uuid } from "../../../../../shared/domain/value-objects/uuid.vo";
-import { NotFoundError } from "../../../../../shared/domain/errors/not-found.error";
-import { CategorySearchParams } from "../../../../domain/category.repository";
-import { SortDirection } from "../../../../../shared/domain/repository/search-params";
-import { setupSequelize } from "../../../../../shared/infra/testing/sequelize.helper";
+import { CategoryModel } from '../category.model';
+import { CategorySequelizeRepository } from '../category-sequelize.repository';
+import { Category } from '../../../../domain/category.entity';
+import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
+import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
+import { CategorySearchParams } from '../../../../domain/category.repository';
+import { SortDirection } from '../../../../../shared/domain/repository/search-params';
+import { setupSequelize } from '../../../../../shared/infra/testing/sequelize.helper';
 
-describe("Category Sequelize Repository", () => {
+describe('Category Sequelize Repository', () => {
   let repository: CategorySequelizeRepository;
 
   setupSequelize({ models: [CategoryModel] });
@@ -16,8 +16,8 @@ describe("Category Sequelize Repository", () => {
     repository = new CategorySequelizeRepository(CategoryModel);
   });
 
-  describe("insert", () => {
-    it("should insert a new entity", async () => {
+  describe('insert', () => {
+    it('should insert a new entity', async () => {
       const category = Category.fake().oneCategory().build();
 
       await repository.insert(category);
@@ -27,8 +27,8 @@ describe("Category Sequelize Repository", () => {
     });
   });
 
-  describe("bulkInsert", () => {
-    it("should insert new entities", async () => {
+  describe('bulkInsert', () => {
+    it('should insert new entities', async () => {
       const categories = Category.fake().manyCategories(3).build();
 
       await repository.bulkInsert(categories);
@@ -37,43 +37,43 @@ describe("Category Sequelize Repository", () => {
       expect(entities).toHaveLength(3);
       entities.forEach((entity) => {
         const category = categories.find(
-          (it) => it.categoryId.id == entity.categoryId.id
+          (it) => it.categoryId.id == entity.categoryId.id,
         );
         expect(entity!.toJSON()).toStrictEqual(category!.toJSON());
       });
     });
   });
 
-  describe("findById", () => {
-    it("should return null if entity is not found", async () => {
+  describe('findById', () => {
+    it('should return null if entity is not found', async () => {
       const entity = await repository.findById(new Uuid());
       expect(entity).toBeNull();
     });
   });
 
-  describe("update", () => {
-    it("should update an entity", async () => {
+  describe('update', () => {
+    it('should update an entity', async () => {
       const category = Category.fake().oneCategory().build();
       await repository.insert(category);
 
-      category.changeName("updated");
+      category.changeName('updated');
       await repository.update(category);
 
       const entity = await repository.findById(category.categoryId);
       expect(entity!.toJSON()).toStrictEqual(category.toJSON());
     });
 
-    it("should throw error when entity is not found", async () => {
+    it('should throw error when entity is not found', async () => {
       const entity = Category.fake().oneCategory().build();
 
       await expect(repository.update(entity)).rejects.toThrow(
-        new NotFoundError(entity.categoryId.id, Category)
+        new NotFoundError(entity.categoryId.id, Category),
       );
     });
   });
 
-  describe("delete", () => {
-    it("should delete an entity", async () => {
+  describe('delete', () => {
+    it('should delete an entity', async () => {
       const category = Category.fake().oneCategory().build();
       await repository.insert(category);
 
@@ -83,17 +83,17 @@ describe("Category Sequelize Repository", () => {
       expect(entity).toBeNull();
     });
 
-    it("should throw error when entity is not found", async () => {
+    it('should throw error when entity is not found', async () => {
       const entity = Category.fake().oneCategory().build();
 
       await expect(repository.delete(entity.categoryId)).rejects.toThrow(
-        new NotFoundError(entity.categoryId.id, Category)
+        new NotFoundError(entity.categoryId.id, Category),
       );
     });
   });
 
-  describe("search", () => {
-    it("should apply default paginate when search params are null", async () => {
+  describe('search', () => {
+    it('should apply default paginate when search params are null', async () => {
       const categories = Category.fake().manyCategories(16).build();
       await repository.bulkInsert(categories);
 
@@ -108,7 +108,7 @@ describe("Category Sequelize Repository", () => {
       expect(searchOutput.items).toHaveLength(15);
     });
 
-    it("should order by createdAt DESC when search params are null", async () => {
+    it('should order by createdAt DESC when search params are null', async () => {
       const createdAt = new Date();
       const categories = Category.fake()
         .manyCategories(5)
@@ -124,26 +124,26 @@ describe("Category Sequelize Repository", () => {
       });
     });
 
-    it("should apply filter", async () => {
+    it('should apply filter', async () => {
       const categories = [
         Category.fake()
           .oneCategory()
-          .withName("test")
+          .withName('test')
           .withCreatedAt(new Date(new Date().getTime() + 5000))
           .build(),
         Category.fake()
           .oneCategory()
-          .withName("a")
+          .withName('a')
           .withCreatedAt(new Date(new Date().getTime() + 4000))
           .build(),
         Category.fake()
           .oneCategory()
-          .withName("TEST")
+          .withName('TEST')
           .withCreatedAt(new Date(new Date().getTime() + 3000))
           .build(),
         Category.fake()
           .oneCategory()
-          .withName("TeSt")
+          .withName('TeSt')
           .withCreatedAt(new Date(new Date().getTime() + 1000))
           .build(),
       ];
@@ -151,31 +151,31 @@ describe("Category Sequelize Repository", () => {
 
       const searchOutput = await repository.search(
         new CategorySearchParams({
-          filter: "test",
-        })
+          filter: 'test',
+        }),
       );
 
       expect(searchOutput.items).toHaveLength(3);
       expect(searchOutput.total).toBe(3);
     });
 
-    it("should apply sort", async () => {
-      expect(repository.sortableFields).toStrictEqual(["name", "createdAt"]);
+    it('should apply sort', async () => {
+      expect(repository.sortableFields).toStrictEqual(['name', 'createdAt']);
 
       const categories = [
-        Category.fake().oneCategory().withName("b").build(),
-        Category.fake().oneCategory().withName("a").build(),
-        Category.fake().oneCategory().withName("d").build(),
-        Category.fake().oneCategory().withName("e").build(),
-        Category.fake().oneCategory().withName("c").build(),
+        Category.fake().oneCategory().withName('b').build(),
+        Category.fake().oneCategory().withName('a').build(),
+        Category.fake().oneCategory().withName('d').build(),
+        Category.fake().oneCategory().withName('e').build(),
+        Category.fake().oneCategory().withName('c').build(),
       ];
       await repository.bulkInsert(categories);
 
       const searchOutput = await repository.search(
         new CategorySearchParams({
-          sort: "name",
+          sort: 'name',
           sortDirection: SortDirection.ASC,
-        })
+        }),
       );
 
       expect(searchOutput.items).toEqual([
@@ -187,36 +187,36 @@ describe("Category Sequelize Repository", () => {
       ]);
     });
 
-    it("should apply paginate, sort and filter", async () => {
+    it('should apply paginate, sort and filter', async () => {
       const categories = [
         Category.fake()
           .oneCategory()
-          .withName("test")
+          .withName('test')
           .withCreatedAt(new Date(new Date().getTime() + 100))
           .build(),
         Category.fake()
           .oneCategory()
-          .withName("a")
+          .withName('a')
           .withCreatedAt(new Date(new Date().getTime() + 200))
           .build(),
         Category.fake()
           .oneCategory()
-          .withName("TEST")
+          .withName('TEST')
           .withCreatedAt(new Date(new Date().getTime() + 300))
           .build(),
         Category.fake()
           .oneCategory()
-          .withName("TeSt")
+          .withName('TeSt')
           .withCreatedAt(new Date(new Date().getTime() + 400))
           .build(),
         Category.fake()
           .oneCategory()
-          .withName("test")
+          .withName('test')
           .withCreatedAt(new Date(new Date().getTime() + 500))
           .build(),
         Category.fake()
           .oneCategory()
-          .withName("TeSt")
+          .withName('TeSt')
           .withCreatedAt(new Date(new Date().getTime() + 600))
           .build(),
       ];
@@ -226,10 +226,10 @@ describe("Category Sequelize Repository", () => {
         new CategorySearchParams({
           page: 2,
           perPage: 2,
-          sort: "createdAt",
+          sort: 'createdAt',
           sortDirection: SortDirection.ASC,
-          filter: "test",
-        })
+          filter: 'test',
+        }),
       );
 
       expect(searchOutput).toMatchObject({

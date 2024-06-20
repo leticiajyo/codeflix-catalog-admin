@@ -1,4 +1,4 @@
-import isEqual from "fast-deep-equal";
+import isEqual from 'fast-deep-equal';
 
 export abstract class ValueObject {
   public equals(vo: this): boolean {

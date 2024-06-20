@@ -1,12 +1,12 @@
-import { NotFoundError } from "../../../../../shared/domain/errors/not-found.error";
-import { Uuid } from "../../../../../shared/domain/value-objects/uuid.vo";
-import { setupSequelize } from "../../../../../shared/infra/testing/sequelize.helper";
-import { Category } from "../../../../domain/category.entity";
-import { CategorySequelizeRepository } from "../../../../infra/db/sequelize/category-sequelize.repository";
-import { CategoryModel } from "../../../../infra/db/sequelize/category.model";
-import { GetCategoryUseCase } from "../get-category.use-case";
+import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
+import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
+import { setupSequelize } from '../../../../../shared/infra/testing/sequelize.helper';
+import { Category } from '../../../../domain/category.entity';
+import { CategorySequelizeRepository } from '../../../../infra/db/sequelize/category-sequelize.repository';
+import { CategoryModel } from '../../../../infra/db/sequelize/category.model';
+import { GetCategoryUseCase } from '../get-category.use-case';
 
-describe("Get Category Use Case", () => {
+describe('Get Category Use Case', () => {
   let useCase: GetCategoryUseCase;
   let repository: CategorySequelizeRepository;
 
@@ -17,16 +17,16 @@ describe("Get Category Use Case", () => {
     useCase = new GetCategoryUseCase(repository);
   });
 
-  describe("execute", () => {
-    it("should throw an error when entity is not found", async () => {
+  describe('execute', () => {
+    it('should throw an error when entity is not found', async () => {
       const uuid = new Uuid();
 
       await expect(() => useCase.execute({ id: uuid.id })).rejects.toThrow(
-        new NotFoundError(uuid.id, Category)
+        new NotFoundError(uuid.id, Category),
       );
     });
 
-    it("should return a category", async () => {
+    it('should return a category', async () => {
       const category = Category.fake().oneCategory().build();
       await repository.insert(category);
 

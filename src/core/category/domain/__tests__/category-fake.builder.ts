@@ -1,29 +1,29 @@
-import { Chance } from "chance";
-import { CategoryFakeBuilder } from "../category-fake.builder";
-import { Uuid } from "../../../shared/domain/value-objects/uuid.vo";
+import { Chance } from 'chance';
+import { CategoryFakeBuilder } from '../category-fake.builder';
+import { Uuid } from '../../../shared/domain/value-objects/uuid.vo';
 
-describe("Category Faker Builder", () => {
-  describe("oneCategory", () => {
-    it("should create category with random values", () => {
+describe('Category Faker Builder', () => {
+  describe('oneCategory', () => {
+    it('should create category with random values', () => {
       const faker = CategoryFakeBuilder.oneCategory();
 
       const category = faker.build();
 
       expect(category.categoryId).toBeInstanceOf(Uuid);
-      expect(typeof category.name === "string").toBeTruthy();
-      expect(typeof category.description === "string").toBeTruthy();
+      expect(typeof category.name === 'string').toBeTruthy();
+      expect(typeof category.description === 'string').toBeTruthy();
       expect(category.isActive).toBe(true);
       expect(category.createdAt).toBeInstanceOf(Date);
     });
 
-    it("should create category with given values", () => {
+    it('should create category with given values', () => {
       const faker = CategoryFakeBuilder.oneCategory();
 
       const categoryId = new Uuid();
-      const name = "name test";
-      const description = "description test";
+      const name = 'name test';
+      const description = 'description test';
       const isActive = false;
-      const createdAt = new Date("2024-06-07T08:00:00");
+      const createdAt = new Date('2024-06-07T08:00:00');
 
       const category = faker
         .withUuid(categoryId)
@@ -41,30 +41,30 @@ describe("Category Faker Builder", () => {
     });
   });
 
-  describe("manyCategories", () => {
-    it("should create categories with random values", () => {
+  describe('manyCategories', () => {
+    it('should create categories with random values', () => {
       const faker = CategoryFakeBuilder.manyCategories(2);
 
       const categories = faker.build();
 
       categories.forEach((category) => {
         expect(category.categoryId).toBeInstanceOf(Uuid);
-        expect(typeof category.name === "string").toBeTruthy();
-        expect(typeof category.description === "string").toBeTruthy();
+        expect(typeof category.name === 'string').toBeTruthy();
+        expect(typeof category.description === 'string').toBeTruthy();
         expect(category.isActive).toBe(true);
         expect(category.createdAt).toBeInstanceOf(Date);
       });
     });
 
-    it("should create categories with given factories", () => {
+    it('should create categories with given factories', () => {
       const count = 2;
       const faker = CategoryFakeBuilder.manyCategories(count);
 
       const categoryId = new Uuid();
-      const name = "name test";
-      const description = "description test";
+      const name = 'name test';
+      const description = 'description test';
       const isActive = false;
-      const createdAt = new Date("2024-06-07T08:00:00");
+      const createdAt = new Date('2024-06-07T08:00:00');
 
       const mockUuidFactory = jest.fn(() => categoryId);
       const mockNameFactory = jest.fn(() => name);

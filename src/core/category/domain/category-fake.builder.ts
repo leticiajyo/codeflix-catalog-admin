@@ -1,6 +1,6 @@
-import { Chance } from "chance";
-import { Category } from "./category.entity";
-import { Uuid } from "../../shared/domain/value-objects/uuid.vo";
+import { Chance } from 'chance';
+import { Category } from './category.entity';
+import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 
 type PropOrFactory<T> = T | ((index: number) => T);
 
@@ -68,7 +68,7 @@ export class CategoryFakeBuilder<T> {
   }
 
   private callFactory(factoryOrValue: PropOrFactory<any>, index: number) {
-    return typeof factoryOrValue === "function"
+    return typeof factoryOrValue === 'function'
       ? factoryOrValue(index)
       : factoryOrValue;
   }

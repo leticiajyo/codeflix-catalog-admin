@@ -1,5 +1,5 @@
-import { Entity } from "../entity";
-import { ValueObject } from "../value-object";
+import { Entity } from '../entity';
+import { ValueObject } from '../value-object';
 
 type SearchResultProps<E extends Entity> = {
   items: E[];

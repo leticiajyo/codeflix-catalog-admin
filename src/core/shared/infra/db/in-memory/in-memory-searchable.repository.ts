@@ -1,12 +1,12 @@
-import { Entity } from "../../../domain/entity";
-import { ISearchableRepository } from "../../../domain/repository/repository.interface";
+import { Entity } from '../../../domain/entity';
+import { ISearchableRepository } from '../../../domain/repository/repository.interface';
 import {
   SearchParams,
   SortDirection,
-} from "../../../domain/repository/search-params";
-import { SearchResult } from "../../../domain/repository/search-result";
-import { ValueObject } from "../../../domain/value-object";
-import { InMemoryRepository } from "./in-memory.repository";
+} from '../../../domain/repository/search-params';
+import { SearchResult } from '../../../domain/repository/search-result';
+import { ValueObject } from '../../../domain/value-object';
+import { InMemoryRepository } from './in-memory.repository';
 
 export abstract class InMemorySearchableRepository<
     E extends Entity,
@@ -23,12 +23,12 @@ export abstract class InMemorySearchableRepository<
     const itemsSorted = this.applySort(
       itemsFiltered,
       props.sort,
-      props.sortDirection
+      props.sortDirection,
     );
     const itemsPaginated = this.applyPaginate(
       itemsSorted,
       props.page,
-      props.perPage
+      props.perPage,
     );
 
     return new SearchResult({
@@ -41,14 +41,14 @@ export abstract class InMemorySearchableRepository<
 
   protected abstract applyFilter(
     items: E[],
-    filter: Filter | null
+    filter: Filter | null,
   ): Promise<E[]>;
 
   protected applySort(
     items: E[],
     sort: string | null,
     sortDirection: SortDirection | null,
-    customGetter?: (sort: string, item: E) => any
+    customGetter?: (sort: string, item: E) => any,
   ) {
     if (!sort || !this.sortableFields.includes(sort)) {
       return items;
@@ -60,11 +60,11 @@ export abstract class InMemorySearchableRepository<
       //@ts-ignore
       const bValue = customGetter ? customGetter(sort, b) : b[sort];
       if (aValue < bValue) {
-        return sortDirection === "asc" ? -1 : 1;
+        return sortDirection === 'asc' ? -1 : 1;
       }
 
       if (aValue > bValue) {
-        return sortDirection === "asc" ? 1 : -1;
+        return sortDirection === 'asc' ? 1 : -1;
       }
 
       return 0;
@@ -73,8 +73,8 @@ export abstract class InMemorySearchableRepository<
 
   protected applyPaginate(
     items: E[],
-    page: SearchParams["page"],
-    perPage: SearchParams["perPage"]
+    page: SearchParams['page'],
+    perPage: SearchParams['perPage'],
   ) {
     const start = (page - 1) * perPage;
     const limit = start + perPage;

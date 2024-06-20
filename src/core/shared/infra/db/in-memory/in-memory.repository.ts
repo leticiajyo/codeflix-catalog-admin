@@ -1,7 +1,7 @@
-import { Entity } from "../../../domain/entity";
-import { NotFoundError } from "../../../domain/errors/not-found.error";
-import { IRepository } from "../../../domain/repository/repository.interface";
-import { ValueObject } from "../../../domain/value-object";
+import { Entity } from '../../../domain/entity';
+import { NotFoundError } from '../../../domain/errors/not-found.error';
+import { IRepository } from '../../../domain/repository/repository.interface';
+import { ValueObject } from '../../../domain/value-object';
 
 export abstract class InMemoryRepository<
   E extends Entity,
@@ -20,7 +20,7 @@ export abstract class InMemoryRepository<
 
   async update(entity: E): Promise<void> {
     const indexFound = this.items.findIndex((item) =>
-      item.entityId.equals(entity.entityId)
+      item.entityId.equals(entity.entityId),
     );
 
     if (indexFound === -1) {
@@ -32,7 +32,7 @@ export abstract class InMemoryRepository<
 
   async delete(entityId: EntityId): Promise<void> {
     const indexFound = this.items.findIndex((item) =>
-      item.entityId.equals(entityId)
+      item.entityId.equals(entityId),
     );
 
     if (indexFound === -1) {
@@ -44,7 +44,7 @@ export abstract class InMemoryRepository<
 
   async findById(entityId: EntityId): Promise<E | null> {
     const item = this.items.find((item) => item.entityId.equals(entityId));
-    return typeof item === "undefined" ? null : item;
+    return typeof item === 'undefined' ? null : item;
   }
 
   async findAll(): Promise<E[]> {
