@@ -34,7 +34,9 @@
       },
 			"extensions": [
 				"ms-azuretools.vscode-docker",
-				"eamodio.gitlens"
+				"eamodio.gitlens",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode"
 			]
 		}
 	}
