@@ -8,7 +8,7 @@ export function setupSequelize(options: SequelizeOptions = {}) {
     _sequelize = new Sequelize({
       ...Config.db(),
       ...options,
-    });
+    } as SequelizeOptions);
   });
 
   beforeEach(async () => await _sequelize.sync({ force: true }));
