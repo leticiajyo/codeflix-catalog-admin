@@ -8,6 +8,7 @@ import {
   Delete,
   Inject,
   ParseUUIDPipe,
+  HttpCode,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -54,14 +55,19 @@ export class CategoriesController {
     return this.serialize(output);
   }
 
+  @HttpCode(204)
+  @Delete(':id')
+  async remove(
+    @Param('id', new ParseUUIDPipe({ errorHttpStatusCode: 400 })) id: string,
+  ) {
+    return this.deleteUseCase.execute({ id });
+  }
+
   @Get()
   findAll() {}
 
   @Get(':id')
   findOne(@Param('id') id: string) {}
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {}
 
   private serialize(output: CategoryOutput) {
     return new CategoryPresenter(output);
