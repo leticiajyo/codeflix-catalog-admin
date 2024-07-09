@@ -63,11 +63,13 @@ export class CategoriesController {
     return this.deleteUseCase.execute({ id });
   }
 
-  @Get()
-  findAll() {}
-
   @Get(':id')
-  findOne(@Param('id') id: string) {}
+  async findOne(
+    @Param('id', new ParseUUIDPipe({ errorHttpStatusCode: 400 })) id: string,
+  ) {
+    const output = await this.getUseCase.execute({ id });
+    return this.serialize(output);
+  }
 
   private serialize(output: CategoryOutput) {
     return new CategoryPresenter(output);
