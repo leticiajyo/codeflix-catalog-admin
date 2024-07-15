@@ -1,5 +1,4 @@
 import { Entity } from '../../shared/domain/entity';
-import { EntityValidationError } from '../../shared/domain/validators/validation.error';
 import { ValueObject } from '../../shared/domain/value-object';
 import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 import { CategoryFakeBuilder } from './category-fake.builder';
@@ -43,11 +42,11 @@ export class Category extends Entity {
 
   static create(command: CategoryCreateCommand): Category {
     const props: CategoryConstructorProps = {
-      categoryId: new Uuid(),
-      description: null,
-      isActive: true,
-      createdAt: new Date(),
       ...command,
+      categoryId: new Uuid(),
+      createdAt: new Date(),
+      description: command.description ?? null,
+      isActive: command.isActive ?? true,
     };
 
     return new Category(props);

@@ -5,12 +5,12 @@ import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 type PropOrFactory<T> = T | ((index: number) => T);
 
 export class CategoryFakeBuilder<T> {
-  private _categoryId: PropOrFactory<Uuid> = (_index) => new Uuid();
-  private _name: PropOrFactory<string> = (_index) => this.chance.word();
-  private _description: PropOrFactory<string | null> = (_index) =>
+  private _categoryId: PropOrFactory<Uuid> = () => new Uuid();
+  private _name: PropOrFactory<string> = () => this.chance.word();
+  private _description: PropOrFactory<string | null> = () =>
     this.chance.paragraph();
-  private _isActive: PropOrFactory<boolean> = (_index) => true;
-  private _createdAt: PropOrFactory<Date> = (_index) => new Date();
+  private _isActive: PropOrFactory<boolean> = () => true;
+  private _createdAt: PropOrFactory<Date> = () => new Date();
 
   private count;
 
