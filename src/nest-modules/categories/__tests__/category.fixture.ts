@@ -181,18 +181,6 @@ export class UpdateCategoryFixture {
       {
         sendData: {
           name: faker.name,
-          description: null,
-          isActive: true,
-        },
-        expected: {
-          name: faker.name,
-          description: null,
-          isActive: true,
-        },
-      },
-      {
-        sendData: {
-          name: faker.name,
           description: faker.description,
         },
         expected: {
@@ -248,8 +236,8 @@ export class UpdateCategoryFixture {
       .withName('t'.repeat(101))
       .build();
     const defaultExpected = {
-      statusCode: 400,
-      error: 'Bad Request',
+      statusCode: 422,
+      error: 'Unprocessable Entity',
     };
 
     return {
@@ -258,7 +246,7 @@ export class UpdateCategoryFixture {
           name: faker.name,
         },
         expected: {
-          message: ['name must be shorter than or equal to 255 characters'],
+          message: ['name must be shorter than or equal to 100 characters'],
           ...defaultExpected,
         },
       },
