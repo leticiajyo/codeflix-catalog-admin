@@ -6,6 +6,22 @@ const config: Config = {
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: '../coverage',
   coverageProvider: 'v8',
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    '.interface.ts',
+    '.fixture.ts',
+    '.input.ts',
+    '.d.ts',
+    '-fake.builder.ts',
+  ],
+  coverageThreshold: {
+    global: {
+      statements: 80,
+      branches: 80,
+      functions: 80,
+      lines: 80,
+    },
+  },
 
   moduleFileExtensions: ['js', 'json', 'ts'],
   rootDir: 'src',
