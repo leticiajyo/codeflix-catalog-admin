@@ -11,6 +11,7 @@ const config: Config = {
     '^.+\\.(t|j)s$': '@swc/jest',
   },
   setupFilesAfterEnv: ['./jest-setup.ts'],
+  maxWorkers: 1, // Ensure tests run sequentially
 };
 
 export default config;

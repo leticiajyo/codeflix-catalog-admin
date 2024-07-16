@@ -354,7 +354,7 @@ export class ListCategoriesFixture {
           filter: 'a',
         },
         expected: {
-          entities: [entitiesMap.AAA, entitiesMap.AaA],
+          entities: [entitiesMap.a, entitiesMap.AaA],
           meta: {
             total: 3,
             currentPage: 1,
@@ -371,7 +371,7 @@ export class ListCategoriesFixture {
           filter: 'a',
         },
         expected: {
-          entities: [entitiesMap.a],
+          entities: [entitiesMap.AAA],
           meta: {
             total: 3,
             currentPage: 2,

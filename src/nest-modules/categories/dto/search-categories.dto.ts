@@ -1,10 +1,13 @@
 import { ListCategoriesInput } from '@core/category/application/use-cases/list-categories/list-categories.use-case';
 import { SortDirection } from '@core/shared/domain/repository/search-params';
+import { Transform } from 'class-transformer';
 
 export class SearchCategoriesDto implements ListCategoriesInput {
+  @Transform(({ value }: { value: string }) => parseInt(value))
   page?: number;
-  per_page?: number;
+  @Transform(({ value }: { value: string }) => parseInt(value))
+  perPage?: number;
   sort?: string;
-  sort_dir?: SortDirection;
+  sortDirection?: SortDirection;
   filter?: string;
 }

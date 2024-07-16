@@ -56,11 +56,12 @@ export class SearchParams<Filter = string> extends ValueObject {
   private sanitizeSortDirection(
     value: SortDirection | undefined | null,
   ): SortDirection | null {
-    if (!this.sort || !value) {
+    if (!this.sort) {
       return null;
     }
 
-    return value;
+    const dir = `${value}`.toLowerCase();
+    return dir === SortDirection.ASC ? SortDirection.ASC : SortDirection.DESC;
   }
 
   private sanitizeFilter(value: Filter | undefined | null) {

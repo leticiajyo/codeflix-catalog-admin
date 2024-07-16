@@ -82,11 +82,11 @@ describe('Search Params Value Object', () => {
             sort: 'field',
             sortDirection: undefined,
           } as SearchParamsProps,
-          expected: null,
+          expected: SortDirection.DESC,
         },
         {
           props: { sort: 'field', sortDirection: null } as SearchParamsProps,
-          expected: null,
+          expected: SortDirection.DESC,
         },
         {
           props: {
