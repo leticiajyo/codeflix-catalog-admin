@@ -1,7 +1,5 @@
 import request from 'supertest';
 
-import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
-
 import { instanceToPlain } from 'class-transformer';
 import { CategoryOutputMapper } from '@core/category/application/common/category.output';
 import { ICategoryRepository } from '@core/category/domain/category.repository';
@@ -9,6 +7,7 @@ import { CategoriesController } from 'src/nest-modules/categories/categories.con
 import { CATEGORY_PROVIDERS } from 'src/nest-modules/categories/categories.providers';
 import { startApp } from 'test/e2e.helper';
 import { CreateCategoryFixture } from 'src/nest-modules/categories/__tests__/category.fixture';
+import { CategoryId } from '@core/category/domain/category.aggregate';
 
 describe('E2E Categories Controller', () => {
   const appHelper = startApp();
@@ -69,7 +68,9 @@ describe('E2E Categories Controller', () => {
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keysInResponse);
           const id = res.body.data.id;
-          const categoryCreated = await categoryRepo.findById(new Uuid(id));
+          const categoryCreated = await categoryRepo.findById(
+            new CategoryId(id),
+          );
 
           const presenter = CategoriesController.serialize(
             CategoryOutputMapper.toOutput(categoryCreated),

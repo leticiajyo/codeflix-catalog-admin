@@ -1,5 +1,8 @@
-import { Uuid } from '../../../shared/domain/value-objects/uuid.vo';
-import { Category, CategoryCreateCommand } from '../category.entity';
+import {
+  Category,
+  CategoryCreateCommand,
+  CategoryId,
+} from '../category.aggregate';
 
 describe('Category Entity', () => {
   let validateSpy: jest.SpyInstance;
@@ -26,7 +29,7 @@ describe('Category Entity', () => {
 
       const category = Category.create(command);
 
-      expect(category.categoryId).toBeInstanceOf(Uuid);
+      expect(category.categoryId).toBeInstanceOf(CategoryId);
       expect(category.name).toBe(command.name);
       expect(category.description).toBeNull();
       expect(category.isActive).toBeTruthy();
@@ -44,7 +47,7 @@ describe('Category Entity', () => {
 
       const category = Category.create(command);
 
-      expect(category.categoryId).toBeInstanceOf(Uuid);
+      expect(category.categoryId).toBeInstanceOf(CategoryId);
       expect(category.name).toBe(command.name);
       expect(category.description).toBe(command.description);
       expect(category.isActive).toBeFalsy();

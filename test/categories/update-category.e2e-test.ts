@@ -1,8 +1,10 @@
 import request from 'supertest';
 import { instanceToPlain } from 'class-transformer';
 import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
-import { Uuid } from '../../src/core/shared/domain/value-objects/uuid.vo';
-import { Category } from '../../src/core/category/domain/category.entity';
+import {
+  Category,
+  CategoryId,
+} from '../../src/core/category/domain/category.aggregate';
 import { startApp } from 'test/e2e.helper';
 import { CategoryOutputMapper } from '@core/category/application/common/category.output';
 import { UpdateCategoryFixture } from 'src/nest-modules/categories/__tests__/category.fixture';
@@ -10,7 +12,7 @@ import { CategoriesController } from 'src/nest-modules/categories/categories.con
 import { CATEGORY_PROVIDERS } from 'src/nest-modules/categories/categories.providers';
 
 describe('CategoriesController (e2e)', () => {
-  const uuid = '9366b7dc-2d71-4799-b91c-c64adb205104';
+  const categoryId = '9366b7dc-2d71-4799-b91c-c64adb205104';
 
   describe('/categories/:id (PATCH)', () => {
     describe('should return error when id is invalid or not found', () => {
@@ -59,7 +61,7 @@ describe('CategoriesController (e2e)', () => {
       }));
       test.each(arrange)('when body is $label', ({ value }) => {
         return request(app.app.getHttpServer())
-          .patch(`/categories/${uuid}`)
+          .patch(`/categories/${categoryId}`)
           .send(value.sendData)
           .expect(400)
           .expect(value.expected);
@@ -116,7 +118,9 @@ describe('CategoriesController (e2e)', () => {
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
           const id = res.body.data.id;
-          const categoryUpdated = await categoryRepo.findById(new Uuid(id));
+          const categoryUpdated = await categoryRepo.findById(
+            new CategoryId(id),
+          );
           const presenter = CategoriesController.serialize(
             CategoryOutputMapper.toOutput(categoryUpdated),
           );

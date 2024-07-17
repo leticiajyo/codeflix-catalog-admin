@@ -1,5 +1,5 @@
 import { MaxLength } from 'class-validator';
-import { Category } from './category.entity';
+import { Category } from './category.aggregate';
 import { ClassValidator } from '../../shared/domain/validators/class-validator';
 import { Notification } from '../../shared/domain/validators/notification';
 

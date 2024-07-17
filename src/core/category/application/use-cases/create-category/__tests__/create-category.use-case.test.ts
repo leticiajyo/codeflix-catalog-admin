@@ -1,4 +1,4 @@
-import { Uuid } from '../../../../../shared/domain/value-objects/uuid.vo';
+import { CategoryId } from '@core/category/domain/category.aggregate';
 import { setupSequelize } from '../../../../../shared/infra/testing/sequelize.helper';
 import { CategorySequelizeRepository } from '../../../../infra/db/sequelize/category-sequelize.repository';
 import { CategoryModel } from '../../../../infra/db/sequelize/category.model';
@@ -33,7 +33,7 @@ describe('Create Category Use Case', () => {
 
       const output = await useCase.execute(input);
 
-      const entity = await repository.findById(new Uuid(output.id));
+      const entity = await repository.findById(new CategoryId(output.id));
       expect(entity).toBeDefined();
 
       expect(output).toStrictEqual({

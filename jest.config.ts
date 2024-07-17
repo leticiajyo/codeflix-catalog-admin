@@ -12,7 +12,6 @@ const config: Config = {
     '.fixture.ts',
     '.input.ts',
     '.d.ts',
-    '-fake.builder.ts',
   ],
   coverageThreshold: {
     global: {

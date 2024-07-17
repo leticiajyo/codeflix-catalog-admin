@@ -1,4 +1,4 @@
-import { Category } from '../category.entity';
+import { Category } from '../category.aggregate';
 
 describe('Category Validator', () => {
   it('should validate category name', () => {

@@ -1,11 +1,11 @@
-import { Entity } from '../../shared/domain/entity';
+import { AggregateRoot } from '@core/shared/domain/aggregate-root';
 import { ValueObject } from '../../shared/domain/value-object';
 import { Uuid } from '../../shared/domain/value-objects/uuid.vo';
 import { CategoryFakeBuilder } from './category-fake.builder';
 import { CategoryValidator } from './category.validator';
 
 export type CategoryConstructorProps = {
-  categoryId: Uuid;
+  categoryId: CategoryId;
   name: string;
   description: string | null;
   isActive: boolean;
@@ -18,8 +18,10 @@ export type CategoryCreateCommand = {
   isActive?: boolean;
 };
 
-export class Category extends Entity {
-  categoryId: Uuid;
+export class CategoryId extends Uuid {}
+
+export class Category extends AggregateRoot {
+  categoryId: CategoryId;
   name: string;
   description: string | null;
   isActive: boolean;
@@ -43,7 +45,7 @@ export class Category extends Entity {
   static create(command: CategoryCreateCommand): Category {
     const props: CategoryConstructorProps = {
       ...command,
-      categoryId: new Uuid(),
+      categoryId: new CategoryId(),
       createdAt: new Date(),
       description: command.description ?? null,
       isActive: command.isActive ?? true,

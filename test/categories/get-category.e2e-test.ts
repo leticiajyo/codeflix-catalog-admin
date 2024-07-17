@@ -2,7 +2,7 @@ import request from 'supertest';
 import { instanceToPlain } from 'class-transformer';
 import { ICategoryRepository } from '../../src/core/category/domain/category.repository';
 import { CategoryOutputMapper } from '@core/category/application/common/category.output';
-import { Category } from '@core/category/domain/category.entity';
+import { Category } from '@core/category/domain/category.aggregate';
 import { GetCategoryFixture } from 'src/nest-modules/categories/__tests__/category.fixture';
 import { CategoriesController } from 'src/nest-modules/categories/categories.controller';
 import { startApp } from 'test/e2e.helper';
