@@ -55,9 +55,7 @@ export abstract class InMemorySearchableRepository<
     }
 
     return items.sort((a, b) => {
-      //@ts-ignore
       const aValue = customGetter ? customGetter(sort, a) : a[sort];
-      //@ts-ignore
       const bValue = customGetter ? customGetter(sort, b) : b[sort];
       if (aValue < bValue) {
         return sortDirection === 'asc' ? -1 : 1;

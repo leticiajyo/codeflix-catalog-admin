@@ -13,6 +13,7 @@
     "incremental": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": false,
     "esModuleInterop": true,
     "paths": {
       "@core/*": ["./src/core/*"]
