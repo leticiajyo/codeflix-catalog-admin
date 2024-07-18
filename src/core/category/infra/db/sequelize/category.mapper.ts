@@ -1,4 +1,4 @@
-import { EntityValidationError } from '../../../../shared/domain/validators/validation.error';
+import { LoadEntityError } from '@core/shared/domain/validators/validation.error';
 import { Category, CategoryId } from '../../../domain/category.aggregate';
 import { CategoryModel } from './category.model';
 
@@ -23,7 +23,7 @@ export class CategoryModelMapper {
     });
 
     if (category.notification.hasErrors()) {
-      throw new EntityValidationError(category.notification.toJSON());
+      throw new LoadEntityError(category.notification.toJSON());
     }
 
     return category;
