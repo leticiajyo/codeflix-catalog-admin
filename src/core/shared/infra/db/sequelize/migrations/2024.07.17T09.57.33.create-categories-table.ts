@@ -3,7 +3,7 @@ import type { MigrationFn } from 'umzug';
 
 export const up: MigrationFn<Sequelize> = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable('categories', {
-    category_id: {
+    categoryId: {
       type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
@@ -16,11 +16,11 @@ export const up: MigrationFn<Sequelize> = async ({ context: sequelize }) => {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    is_active: {
+    isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
-    created_at: {
+    createdAt: {
       type: DataTypes.DATE(3),
       allowNull: false,
     },
