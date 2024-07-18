@@ -140,7 +140,7 @@ describe('Categories Controller', () => {
         page: 1,
         perPage: 2,
         sort: 'name',
-        sort_dir: 'desc' as SortDirection,
+        sortDirection: 'desc' as SortDirection,
         filter: 'test',
       };
 

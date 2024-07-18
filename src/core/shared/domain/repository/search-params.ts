@@ -55,7 +55,7 @@ export class SearchParams<Filter = string> extends ValueObject {
 
   private sanitizeSortDirection(
     value: SortDirection | undefined | null,
-  ): SortDirection | null {
+  ): SortDirection {
     if (!this.sort) {
       return null;
     }
