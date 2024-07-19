@@ -16,7 +16,7 @@ import {
 } from '../../common/cast-member.output';
 import { CastMemberType } from '@core/cast-member/domain/cast-member.aggregate';
 
-class CastMembersFilter {
+export class CastMembersFilter {
   name?: string | null;
   type?: CastMemberType | null;
 }
