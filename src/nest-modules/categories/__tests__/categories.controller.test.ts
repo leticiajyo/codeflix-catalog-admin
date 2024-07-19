@@ -1,5 +1,5 @@
 import { CreateCategoryOutput } from '@core/category/application/use-cases/create-category/create-category.use-case';
-import { GetCategoryOutput } from '@core/category/application/use-cases/get-categories/get-category.use-case';
+import { GetCategoryOutput } from '@core/category/application/use-cases/get-category/get-category.use-case';
 import { ListCategoriesOutput } from '@core/category/application/use-cases/list-categories/list-categories.use-case';
 import { UpdateCategoryInput } from '@core/category/application/use-cases/update-category/update-category.input';
 import { UpdateCategoryOutput } from '@core/category/application/use-cases/update-category/update-category.use-case';
