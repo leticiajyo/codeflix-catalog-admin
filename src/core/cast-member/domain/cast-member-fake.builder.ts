@@ -8,10 +8,10 @@ import {
 type PropOrFactory<T> = T | ((index: number) => T);
 
 export class CastMemberFakeBuilder<T = any> {
-  private _castMemberId: PropOrFactory<CastMemberId> = new CastMemberId();
+  private _castMemberId: PropOrFactory<CastMemberId> = () => new CastMemberId();
   private _name: PropOrFactory<string> = () => this.chance.word();
   private _type: PropOrFactory<CastMemberType> = () => CastMemberType.ACTOR;
-  private _createdAt: PropOrFactory<Date> = new Date();
+  private _createdAt: PropOrFactory<Date> = () => new Date();
 
   private count;
 

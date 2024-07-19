@@ -63,7 +63,6 @@ export class CategorySequelizeRepository implements ICategoryRepository {
 
   async findById(entityId: CategoryId): Promise<Category | null> {
     const model = await this.categoryModel.findByPk(entityId.id);
-
     return model ? CategoryModelMapper.toEntity(model) : null;
   }
 
@@ -87,9 +86,8 @@ export class CategorySequelizeRepository implements ICategoryRepository {
       ...(props.sort &&
       props.sortDirection &&
       this.sortableFields.includes(props.sort)
-        ? // ? { order: [[props.sort, props.sortDirection]] }
-          { order: this.formatSort(props.sort, props.sortDirection) }
-        : { order: [['createdAt', 'desc']] }),
+        ? { order: this.formatSort(props.sort, props.sortDirection) }
+        : { order: [['createdAt', 'DESC']] }),
       offset,
       limit,
     });
