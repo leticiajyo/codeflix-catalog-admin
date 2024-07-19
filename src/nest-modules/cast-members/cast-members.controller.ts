@@ -17,7 +17,6 @@ import { DeleteCastMemberUseCase } from '../../core/cast-member/application/use-
 import { GetCastMemberUseCase } from '../../core/cast-member/application/use-cases/get-cast-member/get-cast-member.use-case';
 import { ListCastMembersUseCase } from '../../core/cast-member/application/use-cases/list-cast-members/list-cast-members.use-case';
 import { CastMemberOutput } from '@core/cast-member/application/common/cast-member.output';
-import { UpdateCastMemberInput } from '@core/cast-member/application/use-cases/update-cast-member/update-cast-member.input';
 import {
   CastMemberCollectionPresenter,
   CastMemberPresenter,
