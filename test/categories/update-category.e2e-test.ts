@@ -59,6 +59,7 @@ describe('CategoriesController (e2e)', () => {
         label: key,
         value: invalidRequest[key],
       }));
+
       test.each(arrange)('when body is $label', ({ value }) => {
         return request(app.app.getHttpServer())
           .patch(`/categories/${categoryId}`)
@@ -83,6 +84,7 @@ describe('CategoriesController (e2e)', () => {
           CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
       });
+
       test.each(arrange)('when body is $label', async ({ value }) => {
         const category = Category.fake().oneCategory().build();
         await categoryRepo.insert(category);
@@ -104,6 +106,7 @@ describe('CategoriesController (e2e)', () => {
           CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
       });
+
       test.each(arrange)(
         'when body is $sendData',
         async ({ sendData, expected }) => {
@@ -114,9 +117,11 @@ describe('CategoriesController (e2e)', () => {
             .patch(`/categories/${categoryCreated.categoryId.id}`)
             .send(sendData)
             .expect(200);
+
           const keyInResponse = UpdateCategoryFixture.keysInResponse;
           expect(Object.keys(res.body)).toStrictEqual(['data']);
           expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);
+
           const id = res.body.data.id;
           const categoryUpdated = await categoryRepo.findById(
             new CategoryId(id),
@@ -125,15 +130,11 @@ describe('CategoriesController (e2e)', () => {
             CategoryOutputMapper.toOutput(categoryUpdated),
           );
           const serialized = instanceToPlain(presenter);
-          expect(res.body.data).toStrictEqual(serialized);
           expect(res.body.data).toStrictEqual({
             id: serialized.id,
             createdAt: serialized.createdAt,
             name: expected.name ?? categoryUpdated.name,
-            description:
-              'description' in expected
-                ? expected.description
-                : categoryUpdated.description,
+            description: expected.description ?? categoryUpdated.description,
             isActive: expected.isActive ?? categoryUpdated.isActive,
           });
         },

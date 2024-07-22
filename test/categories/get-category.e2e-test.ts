@@ -50,6 +50,7 @@ describe('E2E Categories Controller', () => {
       const res = await request(nestApp.app.getHttpServer())
         .get(`/categories/${category.categoryId.id}`)
         .expect(200);
+
       const keyInResponse = GetCategoryFixture.keysInResponse;
       expect(Object.keys(res.body)).toStrictEqual(['data']);
       expect(Object.keys(res.body.data)).toStrictEqual(keyInResponse);

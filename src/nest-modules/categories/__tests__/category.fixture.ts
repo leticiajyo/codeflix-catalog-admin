@@ -328,7 +328,7 @@ export class ListCategoriesFixture {
     const entitiesMap = {
       a: faker.withName('a').build(),
       AAA: faker.withName('AAA').build(),
-      AaA: faker.withName('AaA').build(),
+      aba: faker.withName('aba').build(),
       b: faker.withName('b').build(),
       c: faker.withName('c').build(),
     };
@@ -342,7 +342,7 @@ export class ListCategoriesFixture {
           filter: 'a',
         },
         expected: {
-          entities: [entitiesMap.a, entitiesMap.AaA],
+          entities: [entitiesMap.aba, entitiesMap.AAA],
           meta: {
             total: 3,
             currentPage: 1,
@@ -359,7 +359,7 @@ export class ListCategoriesFixture {
           filter: 'a',
         },
         expected: {
-          entities: [entitiesMap.AAA],
+          entities: [entitiesMap.a],
           meta: {
             total: 3,
             currentPage: 2,
