@@ -59,6 +59,7 @@ export class CastMember extends AggregateRoot {
 
   changeType(type: CastMemberType): void {
     this.type = type;
+    this.validate();
   }
 
   validate() {

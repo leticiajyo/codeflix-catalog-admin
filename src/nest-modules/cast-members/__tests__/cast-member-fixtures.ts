@@ -155,7 +155,7 @@ export class CreateCastMemberFixture {
           type: faker.type,
         },
         expected: {
-          message: ['name must be shorter than or equal to 255 characters'],
+          message: ['name must be shorter than or equal to 100 characters'],
           ...defaultExpected,
         },
       },
@@ -165,7 +165,7 @@ export class CreateCastMemberFixture {
           type: 10,
         },
         expected: {
-          message: ['Invalid cast member type: 10'],
+          message: ['type must not be greater than 2'],
           ...defaultExpected,
         },
       },
@@ -211,8 +211,8 @@ export class UpdateCastMemberFixture {
   static arrangeInvalidRequest() {
     const faker = CastMember.fake().oneActor().withName('Member').build();
     const defaultExpected = {
-      statusCode: 422,
-      error: 'Unprocessable Entity',
+      statusCode: 400,
+      error: 'Bad Request',
     };
 
     return {
@@ -243,7 +243,7 @@ export class UpdateCastMemberFixture {
           type: 10,
         },
         expected: {
-          message: ['Invalid cast member type: 10'],
+          message: ['type must not be greater than 2'],
           ...defaultExpected,
         },
       },
@@ -328,12 +328,12 @@ export class ListCastMembersFixture {
         .withName('a')
         .withCreatedAt(new Date(createdAt.getTime() + 1000))
         .build(),
-      actor_AAA: actor
-        .withName('AAA')
+      actor_AA: actor
+        .withName('AA')
         .withCreatedAt(new Date(createdAt.getTime() + 2000))
         .build(),
-      actor_AaA: actor
-        .withName('AaA')
+      actor_aba: actor
+        .withName('aba')
         .withCreatedAt(new Date(createdAt.getTime() + 3000))
         .build(),
       actor_b: actor
@@ -363,7 +363,7 @@ export class ListCastMembersFixture {
           filter: { name: 'a' },
         },
         expected: {
-          entities: [entitiesMap.actor_AAA, entitiesMap.actor_AaA],
+          entities: [entitiesMap.actor_aba, entitiesMap.actor_AA],
           meta: {
             total: 3,
             currentPage: 1,

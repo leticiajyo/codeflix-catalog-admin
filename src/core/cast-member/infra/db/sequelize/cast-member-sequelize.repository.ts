@@ -1,9 +1,8 @@
-import { literal, Op } from 'sequelize';
+import { Op } from 'sequelize';
 import {
   CastMember,
   CastMemberId,
 } from '../../../domain/cast-member.aggregate';
-import { SortDirection } from '../../../../shared/domain/repository/search-params';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import {
   ICastMemberRepository,
@@ -16,12 +15,6 @@ import { InvalidArgumentError } from '@core/shared/domain/errors/invalid-argumen
 
 export class CastMemberSequelizeRepository implements ICastMemberRepository {
   sortableFields: string[] = ['name', 'createdAt'];
-  orderBy = {
-    mysql: {
-      name: (sortDirection: SortDirection) =>
-        literal(`binary name ${sortDirection}`),
-    },
-  };
   constructor(private castMemberModel: typeof CastMemberModel) {}
 
   async insert(entity: CastMember): Promise<void> {
@@ -139,7 +132,7 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
       ...(props.sort &&
       props.sortDirection &&
       this.sortableFields.includes(props.sort)
-        ? { order: this.formatSort(props.sort, props.sortDirection) }
+        ? { order: [[props.sort, props.sortDirection]] }
         : { order: [['createdAt', 'DESC']] }),
       offset,
       limit,
@@ -150,14 +143,6 @@ export class CastMemberSequelizeRepository implements ICastMemberRepository {
       perPage: props.perPage,
       total: count,
     });
-  }
-
-  private formatSort(sort: string, sortDirection: SortDirection) {
-    const dialect = this.castMemberModel.sequelize.getDialect() as 'mysql';
-    if (this.orderBy[dialect] && this.orderBy[dialect][sort]) {
-      return this.orderBy[dialect][sort](sortDirection);
-    }
-    return [[sort, sortDirection]];
   }
 
   getEntity(): new (...args: any[]) => CastMember {
