@@ -10,7 +10,7 @@ import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequel
 
 describe('CastMembersController (e2e)', () => {
   describe('/cast-members (GET)', () => {
-    describe('should return cast members sorted by created_at when request query is empty', () => {
+    describe('should return cast members sorted by createdAt when request query is empty', () => {
       let castMemberRepo: CastMemberSequelizeRepository;
       const nestApp = startApp();
       const { entitiesMap, arrange } =
