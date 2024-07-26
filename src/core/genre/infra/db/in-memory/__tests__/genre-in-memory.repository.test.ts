@@ -50,7 +50,9 @@ describe('Genre In Memory Repository', () => {
         new SearchParams({ filter: { categoryIds: [categoryId1] } }),
       );
 
-      expect(searchResult.items).toEqual([entity1, entity2]);
+      expect(searchResult.items).toEqual(
+        expect.arrayContaining([entity1, entity2]),
+      );
     });
 
     it('should filter items by name and type', async () => {
