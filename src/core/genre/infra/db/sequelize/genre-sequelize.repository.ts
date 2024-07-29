@@ -9,15 +9,21 @@ import { GenreModel } from './genre-model';
 import { InvalidArgumentError } from '../../../../shared/domain/errors/invalid-argument.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { GenreModelMapper } from './genre-mapper';
+import { UnitOfWorkSequelize } from '@core/shared/infra/db/sequelize/unit-of-work-sequelize';
 
 export class GenreSequelizeRepository implements IGenreRepository {
   sortableFields: string[] = ['name', 'createdAt'];
-  constructor(private genreModel: typeof GenreModel) {}
+
+  constructor(
+    private genreModel: typeof GenreModel,
+    private uow: UnitOfWorkSequelize,
+  ) {}
 
   async insert(entity: Genre): Promise<void> {
     const model = GenreModelMapper.toModelProps(entity);
     await this.genreModel.create(model, {
       include: ['categoryIds'],
+      transaction: this.uow.getTransaction(),
     });
   }
 
@@ -25,12 +31,14 @@ export class GenreSequelizeRepository implements IGenreRepository {
     const models = entities.map((e) => GenreModelMapper.toModelProps(e));
     await this.genreModel.bulkCreate(models, {
       include: ['categoryIds'],
+      transaction: this.uow.getTransaction(),
     });
   }
 
   async findById(entityId: GenreId): Promise<Genre | null> {
     const model = await this.genreModel.findByPk(entityId.id, {
       include: ['categoryIds'],
+      transaction: this.uow.getTransaction(),
     });
     return model ? GenreModelMapper.toEntity(model) : null;
   }
@@ -38,6 +46,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
   async findAll(): Promise<Genre[]> {
     const models = await this.genreModel.findAll({
       include: ['categoryIds'],
+      transaction: this.uow.getTransaction(),
     });
     return models.map((model) => GenreModelMapper.toEntity(model));
   }
@@ -50,6 +59,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
         },
       },
       include: ['categoryIds'],
+      transaction: this.uow.getTransaction(),
     });
     return models.map((model) => GenreModelMapper.toEntity(model));
   }
@@ -70,6 +80,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
           [Op.in]: ids.map((id) => id.id),
         },
       },
+      transaction: this.uow.getTransaction(),
     });
     const existsGenreIds = existsGenreModels.map(
       (model) => new GenreId(model.genreId),
@@ -86,6 +97,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
   async update(entity: Genre): Promise<void> {
     const model = await this.genreModel.findByPk(entity.genreId.id, {
       include: ['categoryIds'],
+      transaction: this.uow.getTransaction(),
     });
 
     if (!model) {
@@ -95,15 +107,22 @@ export class GenreSequelizeRepository implements IGenreRepository {
     await model.$remove(
       'categories',
       model.categoryIds.map((c) => c.categoryId),
+      {
+        transaction: this.uow.getTransaction(),
+      },
     );
 
     const { categoryIds, ...props } = GenreModelMapper.toModelProps(entity);
     await this.genreModel.update(props, {
       where: { genreId: entity.genreId.id },
+      transaction: this.uow.getTransaction(),
     });
     await model.$add(
       'categories',
       categoryIds.map((c) => c.categoryId),
+      {
+        transaction: this.uow.getTransaction(),
+      },
     );
   }
 
@@ -112,9 +131,11 @@ export class GenreSequelizeRepository implements IGenreRepository {
       this.genreModel.associations.categoryIds.target;
     await genreCategoryRelation.destroy({
       where: { genreId: id.id },
+      transaction: this.uow.getTransaction(),
     });
     const affectedRows = await this.genreModel.destroy({
       where: { genreId: id.id },
+      transaction: this.uow.getTransaction(),
     });
 
     if (affectedRows !== 1) {
@@ -175,6 +196,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
       distinct: true,
       include: [props.filter?.categoryIds && 'categoryIds'].filter((i) => i),
       where: wheres.length ? { [Op.and]: wheres.map((w) => w.condition) } : {},
+      transaction: this.uow.getTransaction(),
     });
 
     const columnOrder = orderBy.replace('binary', '').trim().split(' ')[0];
@@ -200,6 +222,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
           (acc, w) => ({ ...acc, [w.field]: w.value }),
           {},
         ),
+        transaction: this.uow.getTransaction(),
       },
     );
 
@@ -213,6 +236,7 @@ export class GenreSequelizeRepository implements IGenreRepository {
       },
       include: ['categoryIds'],
       order: literal(orderBy),
+      transaction: this.uow.getTransaction(),
     });
 
     return new GenreSearchResult({

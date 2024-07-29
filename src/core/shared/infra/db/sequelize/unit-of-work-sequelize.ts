@@ -1,0 +1,62 @@
+import { Sequelize, Transaction } from 'sequelize';
+import { IUnitOfWork } from '../../../domain/repository/unit-of-work.interface';
+
+export class UnitOfWorkSequelize implements IUnitOfWork {
+  private transaction: Transaction | null;
+
+  constructor(private sequelize: Sequelize) {}
+
+  async start(): Promise<void> {
+    if (!this.transaction) {
+      this.transaction = await this.sequelize.transaction();
+    }
+  }
+
+  async commit(): Promise<void> {
+    if (!this.transaction) {
+      throw new Error('No transaction started');
+    }
+
+    await this.transaction.commit();
+    this.transaction = null;
+  }
+
+  async rollback(): Promise<void> {
+    if (!this.transaction) {
+      throw new Error('No transaction started');
+    }
+
+    await this.transaction.rollback();
+    this.transaction = null;
+  }
+
+  async do<T>(workFn: (uow: IUnitOfWork) => Promise<T>): Promise<T> {
+    let isAutoTransaction = false;
+
+    try {
+      if (this.transaction) {
+        const result = await workFn(this);
+        this.transaction = null;
+        return result;
+      }
+
+      return await this.sequelize.transaction(async (t) => {
+        isAutoTransaction = true;
+        this.transaction = t;
+        const result = await workFn(this);
+        this.transaction = null;
+        return result;
+      });
+    } catch (e) {
+      if (!isAutoTransaction) {
+        this.transaction?.rollback();
+      }
+      this.transaction = null;
+      throw e;
+    }
+  }
+
+  getTransaction() {
+    return this.transaction;
+  }
+}
