@@ -93,7 +93,10 @@ describe('Cast Member Sequelize Repository', () => {
         .build();
       await genreRepo.bulkInsert(genres);
 
-      const entities = await genreRepo.findAll();
+      const entities = await genreRepo.findByIds([
+        genres[0].genreId,
+        genres[1].genreId,
+      ]);
 
       for (const entity of entities) {
         const genre = genres.find(

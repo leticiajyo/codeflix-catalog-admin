@@ -50,6 +50,44 @@ describe('Category Sequelize Repository', () => {
     });
   });
 
+  describe('findByIds', () => {
+    it('should return entities for the given ids', async () => {
+      const categories = Category.fake().manyCategories(3).build();
+      await repository.bulkInsert(categories);
+
+      const entities = await repository.findByIds([
+        categories[0].categoryId,
+        categories[1].categoryId,
+      ]);
+      for (const entity of entities) {
+        const genre = categories.find(
+          (genre) => genre.categoryId.id == entity.categoryId.id,
+        );
+
+        expect(entity.toJSON()).toStrictEqual(genre.toJSON());
+      }
+    });
+  });
+
+  describe('existsById', () => {
+    it('should return entities separated in existing or not existing', async () => {
+      const notExistId = new CategoryId();
+
+      const category = Category.fake().oneCategory().build();
+      await repository.insert(category);
+
+      const result = await repository.existsById([
+        category.categoryId,
+        notExistId,
+      ]);
+
+      expect(result).toEqual({
+        exists: [category.categoryId],
+        notExists: [notExistId],
+      });
+    });
+  });
+
   describe('update', () => {
     it('should update an entity', async () => {
       const category = Category.fake().oneCategory().build();
