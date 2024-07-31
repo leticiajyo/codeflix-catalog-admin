@@ -32,7 +32,9 @@ export class CreateGenreInput {
     if (!props) return;
     this.name = props.name;
     this.categoryIds = props.categoryIds;
-    props.isActive && (this.isActive = props.isActive);
+    props.isActive !== null &&
+      props.isActive !== undefined &&
+      (this.isActive = props.isActive);
   }
 }
 
