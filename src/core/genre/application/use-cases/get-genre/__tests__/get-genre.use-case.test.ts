@@ -1,6 +1,6 @@
-import { DeleteGenreUseCase } from '../delete-genre.use-case';
-import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
+import { GetGenreUseCase } from '../get-genre.use-case';
 import { Genre, GenreId } from '../../../../domain/genre.aggregate';
+import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
 import { UnitOfWorkSequelize } from '../../../../../shared/infra/db/sequelize/unit-of-work-sequelize';
 import { Category } from '../../../../../category/domain/category.aggregate';
 import { GenreSequelizeRepository } from '../../../../infra/db/sequelize/genre-sequelize.repository';
@@ -12,9 +12,9 @@ import {
 import { CategoryModel } from '../../../../../category/infra/db/sequelize/category.model';
 import { setupSequelize } from '@core/shared/infra/testing/sequelize.helper';
 
-describe('DeleteGenreUseCase Integration Tests', () => {
+describe('GetGenreUseCase Integration Tests', () => {
   let uow: UnitOfWorkSequelize;
-  let useCase: DeleteGenreUseCase;
+  let useCase: GetGenreUseCase;
   let genreRepo: GenreSequelizeRepository;
   let categoryRepo: CategorySequelizeRepository;
 
@@ -24,9 +24,9 @@ describe('DeleteGenreUseCase Integration Tests', () => {
 
   beforeEach(() => {
     uow = new UnitOfWorkSequelize(sequelizeHelper.sequelize);
-    categoryRepo = new CategorySequelizeRepository(CategoryModel);
     genreRepo = new GenreSequelizeRepository(GenreModel, uow);
-    useCase = new DeleteGenreUseCase(uow, genreRepo);
+    categoryRepo = new CategorySequelizeRepository(CategoryModel);
+    useCase = new GetGenreUseCase(genreRepo, categoryRepo);
   });
 
   describe('execute', () => {
@@ -38,7 +38,7 @@ describe('DeleteGenreUseCase Integration Tests', () => {
       );
     });
 
-    it('should delete a genre', async () => {
+    it('should return a genre', async () => {
       const categories = Category.fake().manyCategories(2).build();
       await categoryRepo.bulkInsert(categories);
 
@@ -49,38 +49,30 @@ describe('DeleteGenreUseCase Integration Tests', () => {
         .build();
       await genreRepo.insert(genre);
 
-      await useCase.execute({
+      const output = await useCase.execute({ id: genre.genreId.id });
+
+      expect(output).toStrictEqual({
         id: genre.genreId.id,
+        name: genre.name,
+        categories: expect.arrayContaining([
+          expect.objectContaining({
+            id: categories[0].categoryId.id,
+            name: categories[0].name,
+            createdAt: categories[0].createdAt,
+          }),
+          expect.objectContaining({
+            id: categories[1].categoryId.id,
+            name: categories[1].name,
+            createdAt: categories[1].createdAt,
+          }),
+        ]),
+        categoryIds: expect.arrayContaining([
+          categories[0].categoryId.id,
+          categories[1].categoryId.id,
+        ]),
+        isActive: true,
+        createdAt: genre.createdAt,
       });
-
-      await expect(genreRepo.findById(genre.genreId)).resolves.toBeNull();
-    });
-
-    it('should rollback transaction when an error occurs', async () => {
-      const categories = Category.fake().manyCategories(2).build();
-      await categoryRepo.bulkInsert(categories);
-
-      const genre = Genre.fake()
-        .oneGenre()
-        .addCategoryId(categories[0].categoryId)
-        .addCategoryId(categories[1].categoryId)
-        .build();
-      await genreRepo.insert(genre);
-
-      GenreModel.afterBulkDestroy('hook-test', () => {
-        return Promise.reject(new Error('Generic Error'));
-      });
-
-      await expect(
-        useCase.execute({
-          id: genre.genreId.id,
-        }),
-      ).rejects.toThrow('Generic Error');
-
-      GenreModel.removeHook('afterBulkDestroy', 'hook-test');
-
-      const genres = await genreRepo.findAll();
-      expect(genres.length).toEqual(1);
     });
   });
 });
