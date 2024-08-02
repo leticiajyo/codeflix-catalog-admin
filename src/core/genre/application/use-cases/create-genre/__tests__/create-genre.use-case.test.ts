@@ -15,7 +15,7 @@ import { CategoryModel } from '../../../../../category/infra/db/sequelize/catego
 import { setupSequelize } from '@core/shared/infra/testing/sequelize.helper';
 import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
 
-describe('CreateGenreUseCase Integration Tests', () => {
+describe('Create Genre Use Case', () => {
   let uow: UnitOfWorkSequelize;
   let useCase: CreateGenreUseCase;
   let genreRepo: GenreSequelizeRepository;

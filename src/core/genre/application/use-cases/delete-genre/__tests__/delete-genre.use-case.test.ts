@@ -12,7 +12,7 @@ import {
 import { CategoryModel } from '../../../../../category/infra/db/sequelize/category.model';
 import { setupSequelize } from '@core/shared/infra/testing/sequelize.helper';
 
-describe('DeleteGenreUseCase Integration Tests', () => {
+describe('Delete Genre Use Case', () => {
   let uow: UnitOfWorkSequelize;
   let useCase: DeleteGenreUseCase;
   let genreRepo: GenreSequelizeRepository;

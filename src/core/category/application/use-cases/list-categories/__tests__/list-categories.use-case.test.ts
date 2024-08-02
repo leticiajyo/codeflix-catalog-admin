@@ -6,7 +6,7 @@ import { CategoryModel } from '../../../../infra/db/sequelize/category.model';
 import { CategoryOutputMapper } from '../../../common/category.output';
 import { ListCategoriesUseCase } from '../list-categories.use-case';
 
-describe('List CategoriesUse Case', () => {
+describe('List Categories Use Case', () => {
   let useCase: ListCategoriesUseCase;
   let repository: CategorySequelizeRepository;
 
