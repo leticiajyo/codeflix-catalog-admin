@@ -4,7 +4,7 @@ import { CastMember } from '../../src/core/cast-member/domain/cast-member.aggreg
 import { CAST_MEMBERS_PROVIDERS } from 'src/nest-modules/cast-members/cast-members.providers';
 import { startApp } from 'test/e2e.helper';
 
-describe('CastMembersController (e2e)', () => {
+describe('E2E Cast Members Controller', () => {
   describe('/delete/:id (DELETE)', () => {
     const nestApp = startApp();
 

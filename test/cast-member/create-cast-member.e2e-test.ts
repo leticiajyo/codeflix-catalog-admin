@@ -8,7 +8,7 @@ import { CastMembersController } from 'src/nest-modules/cast-members/cast-member
 import { CAST_MEMBERS_PROVIDERS } from 'src/nest-modules/cast-members/cast-members.providers';
 import { startApp } from 'test/e2e.helper';
 
-describe('CastMembersController (e2e)', () => {
+describe('E2E Cast Members Controller', () => {
   describe('/cast-members (POST)', () => {
     describe('should a response error with 400 when request body is invalid', () => {
       const app = startApp();

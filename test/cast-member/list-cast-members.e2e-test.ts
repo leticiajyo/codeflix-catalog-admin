@@ -8,7 +8,7 @@ import { CAST_MEMBERS_PROVIDERS } from 'src/nest-modules/cast-members/cast-membe
 import { startApp } from 'test/e2e.helper';
 import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequelize/cast-member-sequelize.repository';
 
-describe('CastMembersController (e2e)', () => {
+describe('E2E Cast Members Controller', () => {
   describe('/cast-members (GET)', () => {
     describe('should return cast members sorted by createdAt when request query is empty', () => {
       let castMemberRepo: CastMemberSequelizeRepository;

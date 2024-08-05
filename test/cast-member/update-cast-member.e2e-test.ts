@@ -9,7 +9,7 @@ import { CastMembersController } from 'src/nest-modules/cast-members/cast-member
 import { CAST_MEMBERS_PROVIDERS } from 'src/nest-modules/cast-members/cast-members.providers';
 import { startApp } from 'test/e2e.helper';
 
-describe('CastMembersController (e2e)', () => {
+describe('E2E Cast Members Controller', () => {
   const uuid = '9366b7dc-2d71-4799-b91c-c64adb205104';
 
   describe('/cast-members/:id (PATCH)', () => {
