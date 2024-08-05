@@ -419,7 +419,7 @@ export class ListCastMembersFixture {
           filter: { type: CastMemberType.ACTOR },
         },
         expected: {
-          entities: [entitiesMap.actor_AaA, entitiesMap.actor_AAA],
+          entities: [entitiesMap.actor_aba, entitiesMap.actor_AA],
           meta: {
             total: 5,
             currentPage: 2,
