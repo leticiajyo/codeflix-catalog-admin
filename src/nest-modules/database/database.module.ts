@@ -3,7 +3,7 @@ import { SequelizeModule, getConnectionToken } from '@nestjs/sequelize';
 import { CategoryModel } from '../../core/category/infra/db/sequelize/category.model';
 import { ConfigService } from '@nestjs/config';
 import { CONFIG_SCHEMA_TYPE } from 'src/nest-modules/config/config.module';
-import { UnitOfWorkSequelize } from '@core/shared/infra/db/sequelize/unit-of-work-sequelize';
+import { UnitOfWorkSequelize } from '../../core/shared/infra/db/sequelize/unit-of-work-sequelize';
 import { Sequelize } from 'sequelize';
 
 const models = [CategoryModel];
