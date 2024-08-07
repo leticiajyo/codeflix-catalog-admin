@@ -48,9 +48,11 @@ export class ListGenresUseCase
       },
       [],
     );
-    //TODO - retirar duplicados
+
+    const uniqueCategories = this.filterUniqueCategoryIds(relatedCategories);
+
     const categoriesRelated =
-      await this.categoryRepo.findByIds(relatedCategories);
+      await this.categoryRepo.findByIds(uniqueCategories);
 
     const items = _items.map((i) => {
       const categoriesOfGenre = categoriesRelated.filter((c) =>
@@ -60,5 +62,17 @@ export class ListGenresUseCase
     });
 
     return PaginationOutputMapper.toOutput(items, searchResult);
+  }
+
+  private filterUniqueCategoryIds(categoryIds: CategoryId[]): CategoryId[] {
+    const seenIds = new Set<string>();
+    return categoryIds.filter((categoryId) => {
+      if (seenIds.has(categoryId.id)) {
+        return false;
+      } else {
+        seenIds.add(categoryId.id);
+        return true;
+      }
+    });
   }
 }

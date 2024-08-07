@@ -87,5 +87,30 @@ describe('List Genres Use Case', () => {
         lastPage: 2,
       });
     });
+
+    it('should filter unique category ids before querying the data', async () => {
+      const categories = Category.fake().manyCategories(3).build();
+      await categoryRepo.bulkInsert(categories);
+
+      const genres = [
+        Genre.fake().oneGenre().addCategoryId(categories[0].categoryId).build(),
+        Genre.fake().oneGenre().addCategoryId(categories[1].categoryId).build(),
+        Genre.fake().oneGenre().addCategoryId(categories[2].categoryId).build(),
+        Genre.fake().oneGenre().addCategoryId(categories[2].categoryId).build(),
+      ];
+      await genreRepo.bulkInsert(genres);
+
+      const spy = jest.spyOn(categoryRepo, 'findByIds');
+
+      await useCase.execute({});
+
+      expect(spy).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          categories[0].categoryId,
+          categories[1].categoryId,
+          categories[2].categoryId,
+        ]),
+      );
+    });
   });
 });
