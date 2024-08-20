@@ -3,6 +3,8 @@ import { CategoryId } from '../../category/domain/category.aggregate';
 import { AggregateRoot } from '../../shared/domain/aggregate-root';
 import { GenreId } from '../../genre/domain/genre.aggregate';
 import { CastMemberId } from '../../cast-member/domain/cast-member.aggregate';
+import { Banner } from './banner.vo';
+import { Thumbnail } from './thumbnail.vo';
 
 export type VideoConstructorProps = {
   videoId: VideoId;
@@ -13,11 +15,15 @@ export type VideoConstructorProps = {
   rating: Rating;
   isOpened: boolean;
   isPublished: boolean;
+  createdAt: Date;
+
+  banner?: Banner;
+  thumbnail?: Thumbnail;
+  thumbnailHalf?: Thumbnail;
 
   categoryIds: Map<string, CategoryId>;
   genreIds: Map<string, GenreId>;
   castMemberIds: Map<string, CastMemberId>;
-  createdAt: Date;
 };
 
 export type VideoCreateCommand = {
@@ -26,8 +32,11 @@ export type VideoCreateCommand = {
   yearLaunched: number;
   duration: number;
   rating: Rating;
-
   isOpened: boolean;
+
+  banner?: Banner;
+  thumbnail?: Thumbnail;
+  thumbnailHalf?: Thumbnail;
 
   categoryIds: CategoryId[];
   genreIds: GenreId[];
@@ -52,15 +61,17 @@ export class Video extends AggregateRoot {
   yearLaunched: number;
   duration: number;
   rating: Rating;
-
   isOpened: boolean;
   isPublished: boolean;
+  createdAt: Date;
+
+  banner: Banner | null;
+  thumbnail: Thumbnail | null;
+  thumbnailHalf: Thumbnail | null;
 
   categoryIds: Map<string, CategoryId>;
   genreIds: Map<string, GenreId>;
   castMemberIds: Map<string, CastMemberId>;
-
-  createdAt: Date;
 
   constructor(props: VideoConstructorProps) {
     super();
@@ -70,14 +81,17 @@ export class Video extends AggregateRoot {
     this.yearLaunched = props.yearLaunched;
     this.duration = props.duration;
     this.rating = props.rating;
-
     this.isOpened = props.isOpened;
     this.isPublished = props.isPublished;
+    this.createdAt = props.createdAt;
+
+    this.banner = props.banner ?? null;
+    this.thumbnail = props.thumbnail ?? null;
+    this.thumbnailHalf = props.thumbnailHalf ?? null;
 
     this.categoryIds = props.categoryIds;
     this.genreIds = props.genreIds;
     this.castMemberIds = props.castMemberIds;
-    this.createdAt = props.createdAt;
 
     this.validate();
   }
@@ -181,10 +195,13 @@ export class Video extends AggregateRoot {
       rating: this.rating,
       isOpened: this.isOpened,
       isPublished: this.isPublished,
+      createdAt: this.createdAt,
+      banner: this.banner ? this.banner.toJSON() : null,
+      thumbnail: this.thumbnail ? this.thumbnail.toJSON() : null,
+      thumbnail_half: this.thumbnailHalf ? this.thumbnailHalf.toJSON() : null,
       categoryIds: Array.from(this.categoryIds.values()).map((id) => id.id),
       genreIds: Array.from(this.genreIds.values()).map((id) => id.id),
       castMemberIds: Array.from(this.castMemberIds.values()).map((id) => id.id),
-      createdAt: this.createdAt,
     };
   }
 
