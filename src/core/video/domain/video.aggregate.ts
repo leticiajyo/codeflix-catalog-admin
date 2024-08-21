@@ -5,6 +5,8 @@ import { GenreId } from '../../genre/domain/genre.aggregate';
 import { CastMemberId } from '../../cast-member/domain/cast-member.aggregate';
 import { Banner } from './banner.vo';
 import { Thumbnail } from './thumbnail.vo';
+import { Trailer } from './trailer.vo';
+import { VideoMedia } from './video-media.vo';
 
 export type VideoConstructorProps = {
   videoId: VideoId;
@@ -20,6 +22,8 @@ export type VideoConstructorProps = {
   banner?: Banner;
   thumbnail?: Thumbnail;
   thumbnailHalf?: Thumbnail;
+  trailer?: Trailer;
+  video?: VideoMedia;
 
   categoryIds: Map<string, CategoryId>;
   genreIds: Map<string, GenreId>;
@@ -37,6 +41,8 @@ export type VideoCreateCommand = {
   banner?: Banner;
   thumbnail?: Thumbnail;
   thumbnailHalf?: Thumbnail;
+  trailer?: Trailer;
+  video?: VideoMedia;
 
   categoryIds: CategoryId[];
   genreIds: GenreId[];
@@ -68,6 +74,8 @@ export class Video extends AggregateRoot {
   banner: Banner | null;
   thumbnail: Thumbnail | null;
   thumbnailHalf: Thumbnail | null;
+  trailer: Trailer | null;
+  video: VideoMedia | null;
 
   categoryIds: Map<string, CategoryId>;
   genreIds: Map<string, GenreId>;
@@ -88,6 +96,8 @@ export class Video extends AggregateRoot {
     this.banner = props.banner ?? null;
     this.thumbnail = props.thumbnail ?? null;
     this.thumbnailHalf = props.thumbnailHalf ?? null;
+    this.trailer = props.trailer ?? null;
+    this.video = props.video ?? null;
 
     this.categoryIds = props.categoryIds;
     this.genreIds = props.genreIds;
@@ -198,7 +208,9 @@ export class Video extends AggregateRoot {
       createdAt: this.createdAt,
       banner: this.banner ? this.banner.toJSON() : null,
       thumbnail: this.thumbnail ? this.thumbnail.toJSON() : null,
-      thumbnail_half: this.thumbnailHalf ? this.thumbnailHalf.toJSON() : null,
+      thumbnailHalf: this.thumbnailHalf ? this.thumbnailHalf.toJSON() : null,
+      trailer: this.trailer ? this.trailer.toJSON() : null,
+      video: this.video ? this.video.toJSON() : null,
       categoryIds: Array.from(this.categoryIds.values()).map((id) => id.id),
       genreIds: Array.from(this.genreIds.values()).map((id) => id.id),
       castMemberIds: Array.from(this.castMemberIds.values()).map((id) => id.id),
