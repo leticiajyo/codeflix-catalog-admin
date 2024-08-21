@@ -7,6 +7,7 @@ import { Banner } from './banner.vo';
 import { Thumbnail } from './thumbnail.vo';
 import { Trailer } from './trailer.vo';
 import { VideoMedia } from './video-media.vo';
+import { VideoValidator } from './video.validator';
 
 export type VideoConstructorProps = {
   videoId: VideoId;
@@ -190,10 +191,10 @@ export class Video extends AggregateRoot {
     this.castMemberIds = new Map(castMembersId.map((id) => [id.id, id]));
   }
 
-  //   validate(fields?: string[]) {
-  //     const validator = VideoValidator();
-  //     return validator.validate(this.notification, this);
-  //   }
+  private validate() {
+    const validator = new VideoValidator();
+    return validator.validate(this.notification, this);
+  }
 
   toJSON() {
     return {
