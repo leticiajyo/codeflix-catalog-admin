@@ -8,6 +8,8 @@ import { Thumbnail } from './thumbnail.vo';
 import { Trailer } from './trailer.vo';
 import { VideoMedia } from './video-media.vo';
 import { VideoValidator } from './video.validator';
+import { ThumbnailHalf } from './thumbnail-half.vo';
+import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
 
 export type VideoConstructorProps = {
   videoId: VideoId;
@@ -22,7 +24,7 @@ export type VideoConstructorProps = {
 
   banner?: Banner;
   thumbnail?: Thumbnail;
-  thumbnailHalf?: Thumbnail;
+  thumbnailHalf?: ThumbnailHalf;
   trailer?: Trailer;
   video?: VideoMedia;
 
@@ -41,7 +43,7 @@ export type VideoCreateCommand = {
 
   banner?: Banner;
   thumbnail?: Thumbnail;
-  thumbnailHalf?: Thumbnail;
+  thumbnailHalf?: ThumbnailHalf;
   trailer?: Trailer;
   video?: VideoMedia;
 
@@ -74,7 +76,7 @@ export class Video extends AggregateRoot {
 
   banner: Banner | null;
   thumbnail: Thumbnail | null;
-  thumbnailHalf: Thumbnail | null;
+  thumbnailHalf: ThumbnailHalf | null;
   trailer: Trailer | null;
   video: VideoMedia | null;
 
@@ -123,7 +125,9 @@ export class Video extends AggregateRoot {
       castMemberIds: new Map(command.castMemberIds.map((id) => [id.id, id])),
     };
 
-    return new Video(props);
+    const video = new Video(props);
+    video.markAsPublished();
+    return video;
   }
 
   changeTitle(title: string): void {
@@ -153,6 +157,39 @@ export class Video extends AggregateRoot {
 
   markAsNotOpened(): void {
     this.isOpened = false;
+  }
+
+  replaceBanner(banner: Banner): void {
+    this.banner = banner;
+  }
+
+  replaceThumbnail(thumbnail: Thumbnail): void {
+    this.thumbnail = thumbnail;
+  }
+
+  replaceThumbnailHalf(thumbnailHalf: ThumbnailHalf): void {
+    this.thumbnailHalf = thumbnailHalf;
+  }
+
+  replaceTrailer(trailer: Trailer): void {
+    this.trailer = trailer;
+    this.markAsPublished();
+  }
+
+  replaceVideo(video: VideoMedia): void {
+    this.video = video;
+    this.markAsPublished();
+  }
+
+  private markAsPublished() {
+    if (
+      this.trailer &&
+      this.video &&
+      this.trailer.status === AudioVideoMediaStatus.COMPLETED &&
+      this.video.status === AudioVideoMediaStatus.COMPLETED
+    ) {
+      this.isPublished = true;
+    }
   }
 
   addCategoryId(categoryId: CategoryId): void {
