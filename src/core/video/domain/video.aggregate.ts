@@ -10,6 +10,7 @@ import { VideoMedia } from './video-media.vo';
 import { VideoValidator } from './video.validator';
 import { ThumbnailHalf } from './thumbnail-half.vo';
 import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
+import { VideoFakeBuilder } from './video-fake.builder';
 
 export type VideoConstructorProps = {
   videoId: VideoId;
@@ -255,7 +256,7 @@ export class Video extends AggregateRoot {
     };
   }
 
-  // static fake() {
-  //   return VideoFakeBuilder;
-  // }
+  static fake() {
+    return VideoFakeBuilder;
+  }
 }

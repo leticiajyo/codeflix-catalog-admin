@@ -56,7 +56,7 @@ export class GenreFakeBuilder<T> {
   build(): T {
     const genres = new Array(this.count).fill(undefined).map((_, index) => {
       const categoryIds = this._categoryIds.length
-        ? this._categoryIds.map((it) => this.callFactory(it, index))
+        ? this.callFactory(this._categoryIds, index)
         : [new CategoryId()];
 
       return new Genre({
@@ -71,8 +71,14 @@ export class GenreFakeBuilder<T> {
   }
 
   private callFactory(factoryOrValue: PropOrFactory<any>, index: number) {
-    return typeof factoryOrValue === 'function'
-      ? factoryOrValue(index)
-      : factoryOrValue;
+    if (typeof factoryOrValue === 'function') {
+      return factoryOrValue(index);
+    }
+
+    if (factoryOrValue instanceof Array) {
+      return factoryOrValue.map((value) => this.callFactory(value, index));
+    }
+
+    return factoryOrValue;
   }
 }
