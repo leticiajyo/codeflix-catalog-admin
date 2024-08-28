@@ -221,7 +221,7 @@ export class VideoFakeBuilder<T> {
         ? this.callFactory(this._categoryIds, index)
         : [new CategoryId()];
 
-      const genresId = this._genreIds.length
+      const genreIds = this._genreIds.length
         ? this.callFactory(this._genreIds, index)
         : [new GenreId()];
 
@@ -244,9 +244,9 @@ export class VideoFakeBuilder<T> {
         thumbnailHalf: this.callFactory(this._thumbnailHalf, index),
         trailer: this.callFactory(this._trailer, index),
         video: this.callFactory(this._video, index),
-        categoryIds: categoryIds,
-        genreIds: genresId,
-        castMemberIds: castMemberIds,
+        categoryIds: new Map(categoryIds.map((id) => [id.id, id])),
+        genreIds: new Map(genreIds.map((id) => [id.id, id])),
+        castMemberIds: new Map(castMemberIds.map((id) => [id.id, id])),
       });
     });
     return this.count === 1 ? (videos[0] as any) : videos;
