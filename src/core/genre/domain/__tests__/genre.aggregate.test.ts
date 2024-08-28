@@ -1,7 +1,7 @@
 import { CategoryId } from '@core/category/domain/category.aggregate';
 import { Genre, GenreCreateCommand, GenreId } from '../genre.aggregate';
 
-describe('Genre Entity', () => {
+describe('Genre Aggregate', () => {
   let validateSpy: jest.SpyInstance;
 
   beforeEach(() => {

@@ -5,7 +5,7 @@ import {
   CastMemberType,
 } from '../cast-member.aggregate';
 
-describe('Cast Member Entity', () => {
+describe('Cast Member Aggregate', () => {
   let validateSpy: jest.SpyInstance;
 
   beforeEach(() => {

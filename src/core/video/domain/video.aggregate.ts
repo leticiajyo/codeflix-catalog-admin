@@ -50,9 +50,9 @@ export type VideoCreateCommand = {
   trailer?: Trailer;
   video?: VideoMedia;
 
-  categoryIds: CategoryId[];
-  genreIds: GenreId[];
-  castMemberIds: CastMemberId[];
+  categoryIds?: CategoryId[];
+  genreIds?: GenreId[];
+  castMemberIds?: CastMemberId[];
 };
 
 export class VideoId extends Uuid {}
@@ -132,9 +132,15 @@ export class Video extends AggregateRoot {
       createdAt: new Date(),
       isPublished: false,
 
-      categoryIds: new Map(command.categoryIds.map((id) => [id.id, id])),
-      genreIds: new Map(command.genreIds.map((id) => [id.id, id])),
-      castMemberIds: new Map(command.castMemberIds.map((id) => [id.id, id])),
+      categoryIds: command.categoryIds
+        ? new Map(command.categoryIds.map((id) => [id.id, id]))
+        : new Map(),
+      genreIds: command.genreIds
+        ? new Map(command.genreIds.map((id) => [id.id, id]))
+        : new Map(),
+      castMemberIds: command.castMemberIds
+        ? new Map(command.castMemberIds.map((id) => [id.id, id]))
+        : new Map(),
     };
 
     const video = new Video(props);
@@ -245,8 +251,8 @@ export class Video extends AggregateRoot {
     this.genreIds.delete(genreId.id);
   }
 
-  syncGenresId(genresId: GenreId[]): void {
-    this.genreIds = new Map(genresId.map((id) => [id.id, id]));
+  syncGenreIds(genreIds: GenreId[]): void {
+    this.genreIds = new Map(genreIds.map((id) => [id.id, id]));
   }
 
   addCastMemberId(castMemberId: CastMemberId): void {
@@ -257,8 +263,8 @@ export class Video extends AggregateRoot {
     this.castMemberIds.delete(castMemberId.id);
   }
 
-  syncCastMembersId(castMembersId: CastMemberId[]): void {
-    this.castMemberIds = new Map(castMembersId.map((id) => [id.id, id]));
+  syncCastMemberIds(castMemberIds: CastMemberId[]): void {
+    this.castMemberIds = new Map(castMemberIds.map((id) => [id.id, id]));
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

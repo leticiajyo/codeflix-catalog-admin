@@ -4,7 +4,7 @@ import {
   CategoryId,
 } from '../category.aggregate';
 
-describe('Category Entity', () => {
+describe('Category Aggregate', () => {
   let validateSpy: jest.SpyInstance;
 
   beforeEach(() => {
