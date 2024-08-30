@@ -571,7 +571,7 @@ export class ListGenresFixture {
           page: 1,
           perPage: 2,
           sort: 'createdAt',
-          sort_dir: 'desc' as SortDirection,
+          sortDirection: 'desc' as SortDirection,
           filter: { categoryIds: [categories[0].categoryId.id] },
         },
         get label() {
@@ -595,7 +595,7 @@ export class ListGenresFixture {
           page: 2,
           perPage: 2,
           sort: 'createdAt',
-          sort_dir: 'desc' as SortDirection,
+          sortDirection: 'desc' as SortDirection,
           filter: { categoryIds: [categories[0].categoryId.id] },
         },
         get label() {
@@ -619,7 +619,7 @@ export class ListGenresFixture {
           page: 1,
           perPage: 2,
           sort: 'createdAt',
-          sort_dir: 'desc' as SortDirection,
+          sortDirection: 'desc' as SortDirection,
           filter: {
             categoryIds: [
               categories[0].categoryId.id,
@@ -648,7 +648,7 @@ export class ListGenresFixture {
           page: 2,
           perPage: 2,
           sort: 'createdAt',
-          sort_dir: 'desc' as SortDirection,
+          sortDirection: 'desc' as SortDirection,
           filter: {
             categoryIds: [
               categories[0].categoryId.id,

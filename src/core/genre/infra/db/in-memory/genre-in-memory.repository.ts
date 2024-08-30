@@ -18,7 +18,7 @@ export class GenreInMemoryRepository
 
   protected async applyFilter(
     items: Genre[],
-    filter: GenreFilter,
+    filter: GenreFilter | null,
   ): Promise<Genre[]> {
     if (!filter) {
       return items;
