@@ -10,7 +10,7 @@ import { UnitOfWorkSequelize } from '../../core/shared/infra/db/sequelize/unit-o
 import { IUnitOfWork } from '../../core/shared/domain/repository/unit-of-work.interface';
 import { ICategoryRepository } from '../../core/category/domain/category.repository';
 import { GenreSequelizeRepository } from '../../core/genre/infra/db/sequelize/genre-sequelize.repository';
-import { GenreModel } from '../../core/genre/infra/db/sequelize/genre-model';
+import { GenreModel } from '../../core/genre/infra/db/sequelize/genre.model';
 import { CATEGORY_PROVIDERS } from '../categories/categories.providers';
 
 export const REPOSITORIES = {

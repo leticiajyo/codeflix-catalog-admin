@@ -12,7 +12,7 @@ import { CategorySequelizeRepository } from '../../../../../category/infra/db/se
 import {
   GenreCategoryModel,
   GenreModel,
-} from '../../../../infra/db/sequelize/genre-model';
+} from '../../../../infra/db/sequelize/genre.model';
 import { CategoryModel } from '../../../../../category/infra/db/sequelize/category.model';
 import { setupSequelize } from '@core/shared/infra/testing/sequelize.helper';
 import { EntityValidationError } from '@core/shared/domain/validators/validation.error';

@@ -3,7 +3,7 @@ import { GenreSearchParams } from '@core/genre/domain/genre.repository';
 import { NotFoundError } from '../../../../../shared/domain/errors/not-found.error';
 import { SortDirection } from '../../../../../shared/domain/repository/search-params';
 import { setupSequelize } from '../../../../../shared/infra/testing/sequelize.helper';
-import { GenreCategoryModel, GenreModel } from '../genre-model';
+import { GenreCategoryModel, GenreModel } from '../genre.model';
 import { GenreSequelizeRepository } from '../genre-sequelize.repository';
 import { CategoryModel } from '@core/category/infra/db/sequelize/category.model';
 import { CategorySequelizeRepository } from '@core/category/infra/db/sequelize/category-sequelize.repository';

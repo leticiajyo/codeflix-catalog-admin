@@ -1,7 +1,7 @@
 import { CategoryId } from '../../../../category/domain/category.aggregate';
 import { LoadEntityError } from '../../../../shared/domain/validators/validation.error';
 import { Genre, GenreId } from '../../../domain/genre.aggregate';
-import { GenreCategoryModel, GenreModel } from './genre-model';
+import { GenreCategoryModel, GenreModel } from './genre.model';
 
 export class GenreModelMapper {
   static toModelProps(entity: Genre) {

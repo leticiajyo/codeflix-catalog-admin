@@ -6,7 +6,7 @@ import { UnitOfWorkSequelize } from '../../../../../shared/infra/db/sequelize/un
 import {
   GenreCategoryModel,
   GenreModel,
-} from '../../../../infra/db/sequelize/genre-model';
+} from '../../../../infra/db/sequelize/genre.model';
 import { GenreSequelizeRepository } from '../../../../infra/db/sequelize/genre-sequelize.repository';
 import { ListGenresUseCase } from '../list-genres.use-case';
 import { Category } from '@core/category/domain/category.aggregate';

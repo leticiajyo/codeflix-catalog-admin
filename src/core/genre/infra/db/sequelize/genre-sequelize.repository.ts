@@ -5,10 +5,10 @@ import {
   GenreSearchResult,
   IGenreRepository,
 } from '../../../domain/genre.repository';
-import { GenreModel } from './genre-model';
+import { GenreModel } from './genre.model';
 import { InvalidArgumentError } from '../../../../shared/domain/errors/invalid-argument.error';
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
-import { GenreModelMapper } from './genre-mapper';
+import { GenreModelMapper } from './genre.mapper';
 import { UnitOfWorkSequelize } from '@core/shared/infra/db/sequelize/unit-of-work-sequelize';
 
 export class GenreSequelizeRepository implements IGenreRepository {

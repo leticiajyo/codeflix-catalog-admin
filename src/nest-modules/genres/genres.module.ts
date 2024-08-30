@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import {
   GenreCategoryModel,
   GenreModel,
-} from '../../core/genre/infra/db/sequelize/genre-model';
+} from '../../core/genre/infra/db/sequelize/genre.model';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { CategoriesModule } from '../categories/categories.module';
 import { GENRES_PROVIDERS } from './genres.providers';
