@@ -8,7 +8,7 @@ import { ThumbnailHalf } from '../thumbnail-half.vo';
 import { Thumbnail } from '../thumbnail.vo';
 import { Trailer } from '../trailer.vo';
 import { VideoMedia } from '../video-media.vo';
-import { VideoAudioMediaReplaced } from '../events/video-audio-media-replaced.event';
+import { AudioVideoMediaReplaced } from '../events/video-audio-media-replaced.event';
 
 describe('Video Aggregate', () => {
   let validateSpy: jest.SpyInstance;
@@ -309,7 +309,7 @@ describe('Video Aggregate', () => {
 
       expect(video.trailer).toEqual(newTrailer);
       expect(emitEventSpy).toHaveBeenCalledWith(
-        expect.any(VideoAudioMediaReplaced),
+        expect.any(AudioVideoMediaReplaced),
       );
       expect(tryMarkAsPublishedSpy).toHaveBeenCalledTimes(1);
     });
@@ -326,7 +326,7 @@ describe('Video Aggregate', () => {
 
       expect(video.video).toEqual(newVideoMedia);
       expect(emitEventSpy).toHaveBeenCalledWith(
-        expect.any(VideoAudioMediaReplaced),
+        expect.any(AudioVideoMediaReplaced),
       );
       expect(tryMarkAsPublishedSpy).toHaveBeenCalledTimes(1);
     });

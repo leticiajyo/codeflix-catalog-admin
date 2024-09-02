@@ -10,9 +10,9 @@ import { VideoMedia } from './video-media.vo';
 import { VideoValidator } from './video.validator';
 import { ThumbnailHalf } from './thumbnail-half.vo';
 import { VideoFakeBuilder } from './video-fake.builder';
-import { VideoAudioMediaReplaced } from './events/video-audio-media-replaced.event';
+import { AudioVideoMediaReplaced } from './events/video-audio-media-replaced.event';
 import { VideoCreatedEvent } from './events/video-created.event';
-import { VideoAudioMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
+import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
 
 export type VideoConstructorProps = {
   videoId: VideoId;
@@ -116,7 +116,7 @@ export class Video extends AggregateRoot {
       this.onVideoCreated.bind(this),
     );
     this.registerHandler(
-      VideoAudioMediaReplaced.name,
+      AudioVideoMediaReplaced.name,
       this.onAudioVideoMediaReplaced.bind(this),
     );
   }
@@ -212,7 +212,7 @@ export class Video extends AggregateRoot {
   replaceTrailer(trailer: Trailer): void {
     this.trailer = trailer;
     this.emitEvent(
-      new VideoAudioMediaReplaced({
+      new AudioVideoMediaReplaced({
         aggregateId: this.videoId,
         media: trailer,
         mediaType: 'trailer',
@@ -223,7 +223,7 @@ export class Video extends AggregateRoot {
   replaceVideo(video: VideoMedia): void {
     this.video = video;
     this.emitEvent(
-      new VideoAudioMediaReplaced({
+      new AudioVideoMediaReplaced({
         aggregateId: this.videoId,
         media: video,
         mediaType: 'video',
@@ -277,7 +277,7 @@ export class Video extends AggregateRoot {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onAudioVideoMediaReplaced(_event: VideoAudioMediaReplaced) {
+  onAudioVideoMediaReplaced(_event: AudioVideoMediaReplaced) {
     if (this.isPublished) {
       return;
     }
@@ -289,8 +289,8 @@ export class Video extends AggregateRoot {
     if (
       this.trailer &&
       this.video &&
-      this.trailer.status === VideoAudioMediaStatus.COMPLETED &&
-      this.video.status === VideoAudioMediaStatus.COMPLETED
+      this.trailer.status === AudioVideoMediaStatus.COMPLETED &&
+      this.video.status === AudioVideoMediaStatus.COMPLETED
     ) {
       this.isPublished = true;
     }

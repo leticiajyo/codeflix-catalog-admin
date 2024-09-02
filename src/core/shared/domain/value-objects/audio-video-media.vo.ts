@@ -1,17 +1,17 @@
 import { ValueObject } from '../value-object';
 
-export enum VideoAudioMediaStatus {
+export enum AudioVideoMediaStatus {
   PENDING = 'pending',
   PROCESSING = 'processing',
   COMPLETED = 'completed',
   FAILED = 'failed',
 }
 
-export abstract class VideoAudioMedia extends ValueObject {
+export abstract class AudioVideoMedia extends ValueObject {
   readonly name: string;
   readonly rawLocation: string;
   readonly encodedLocation: string | null;
-  readonly status: VideoAudioMediaStatus;
+  readonly status: AudioVideoMediaStatus;
 
   constructor({
     name,
@@ -22,7 +22,7 @@ export abstract class VideoAudioMedia extends ValueObject {
     name: string;
     rawLocation: string;
     encodedLocation?: string;
-    status: VideoAudioMediaStatus;
+    status: AudioVideoMediaStatus;
   }) {
     super();
     this.name = name;

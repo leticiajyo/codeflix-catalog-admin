@@ -4,13 +4,13 @@ import { Trailer } from '../trailer.vo';
 import { VideoMedia } from '../video-media.vo';
 import { VideoId } from '../video.aggregate';
 
-type VideoAudioMediaReplacedProps = {
+type AudioVideoMediaReplacedProps = {
   aggregateId: VideoId;
   media: Trailer | VideoMedia;
   mediaType: 'trailer' | 'video';
 };
 
-export class VideoAudioMediaReplaced implements IDomainEvent {
+export class AudioVideoMediaReplaced implements IDomainEvent {
   aggregateId: Uuid;
   occurredOn: Date;
   eventVersion: number;
@@ -18,7 +18,7 @@ export class VideoAudioMediaReplaced implements IDomainEvent {
   readonly media: Trailer | VideoMedia;
   readonly mediaType: 'trailer' | 'video';
 
-  constructor(props: VideoAudioMediaReplacedProps) {
+  constructor(props: AudioVideoMediaReplacedProps) {
     this.aggregateId = props.aggregateId;
     this.media = props.media;
     this.mediaType = props.mediaType;

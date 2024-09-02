@@ -8,7 +8,7 @@ import { ThumbnailHalf } from '../thumbnail-half.vo';
 import { Thumbnail } from '../thumbnail.vo';
 import { Trailer } from '../trailer.vo';
 import { VideoMedia } from '../video-media.vo';
-import { VideoAudioMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
+import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
 
 describe('Video Faker Builder', () => {
   describe('oneVideoWithoutMedias', () => {
@@ -77,10 +77,10 @@ describe('Video Faker Builder', () => {
 
       expect(video.trailer).toBeInstanceOf(Trailer);
       expect(video.trailer.encodedLocation).toBeDefined();
-      expect(video.trailer.status).toBe(VideoAudioMediaStatus.COMPLETED);
+      expect(video.trailer.status).toBe(AudioVideoMediaStatus.COMPLETED);
       expect(video.video).toBeInstanceOf(VideoMedia);
       expect(video.video.encodedLocation).toBeDefined();
-      expect(video.video.status).toBe(VideoAudioMediaStatus.COMPLETED);
+      expect(video.video.status).toBe(AudioVideoMediaStatus.COMPLETED);
     });
 
     it('should create video with given values', () => {

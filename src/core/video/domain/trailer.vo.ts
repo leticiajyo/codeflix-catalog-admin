@@ -1,11 +1,11 @@
 import { MediaFileValidator } from '../../shared/domain/validators/media-file.validator';
 import {
-  VideoAudioMedia,
-  VideoAudioMediaStatus,
+  AudioVideoMedia,
+  AudioVideoMediaStatus,
 } from '../../shared/domain/value-objects/audio-video-media.vo';
 import { VideoId } from './video.aggregate';
 
-export class Trailer extends VideoAudioMedia {
+export class Trailer extends AudioVideoMedia {
   static maxSize = 1024 * 1024 * 500; // 50MB
   static mimeTypes = ['video/mp4'];
 
@@ -41,7 +41,7 @@ export class Trailer extends VideoAudioMedia {
     return new Trailer({
       name,
       rawLocation,
-      status: VideoAudioMediaStatus.PENDING,
+      status: AudioVideoMediaStatus.PENDING,
     });
   }
 
@@ -50,7 +50,7 @@ export class Trailer extends VideoAudioMedia {
       name: this.name,
       rawLocation: this.rawLocation,
       encodedLocation: this.encodedLocation!,
-      status: VideoAudioMediaStatus.PROCESSING,
+      status: AudioVideoMediaStatus.PROCESSING,
     });
   }
 
@@ -59,7 +59,7 @@ export class Trailer extends VideoAudioMedia {
       name: this.name,
       rawLocation: this.rawLocation,
       encodedLocation,
-      status: VideoAudioMediaStatus.COMPLETED,
+      status: AudioVideoMediaStatus.COMPLETED,
     });
   }
 
@@ -68,7 +68,7 @@ export class Trailer extends VideoAudioMedia {
       name: this.name,
       rawLocation: this.rawLocation,
       encodedLocation: this.encodedLocation!,
-      status: VideoAudioMediaStatus.FAILED,
+      status: AudioVideoMediaStatus.FAILED,
     });
   }
 }
