@@ -17,12 +17,17 @@ import {
   VideoGenreModel,
   VideoModel,
 } from '../video.model';
-import { CastMember } from '@core/cast-member/domain/cast-member.aggregate';
-import { Category } from '@core/category/domain/category.aggregate';
-import { Genre } from '@core/genre/domain/genre.aggregate';
+import {
+  CastMember,
+  CastMemberId,
+} from '@core/cast-member/domain/cast-member.aggregate';
+import { Category, CategoryId } from '@core/category/domain/category.aggregate';
+import { Genre, GenreId } from '@core/genre/domain/genre.aggregate';
 import { AudioVideoMediaModel } from '../audio-video-media.model';
 import { ImageMediaModel } from '../image-media.model';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
+import { VideoSearchParams } from '@core/video/domain/video.repository';
+import { SortDirection } from '@core/shared/domain/repository/search-params';
 
 describe('VideoSequelizeRepository Integration Tests', () => {
   let videoRepo: VideoSequelizeRepository;
@@ -244,6 +249,240 @@ describe('VideoSequelizeRepository Integration Tests', () => {
 
       await expect(videoRepo.delete(entity.videoId)).rejects.toThrow(
         new NotFoundError(entity.videoId.id, Video),
+      );
+    });
+  });
+
+  describe('search', () => {
+    it('should apply default paginate when search params are null', async () => {
+      const { category, genre, castMember } = await createVideoRelations(
+        categoryRepo,
+        genreRepo,
+        castMemberRepo,
+      );
+
+      const videos = Video.fake()
+        .manyVideosWithoutMedias(16)
+        .addCategoryId(category.categoryId)
+        .addGenreId(genre.genreId)
+        .addCastMemberId(castMember.castMemberId)
+        .build();
+      await videoRepo.bulkInsert(videos);
+
+      const searchOutput = await videoRepo.search(new VideoSearchParams());
+
+      expect(searchOutput).toMatchObject({
+        total: 16,
+        currentPage: 1,
+        lastPage: 2,
+        perPage: 15,
+      });
+      expect(searchOutput.items).toHaveLength(15);
+    });
+
+    it('should order by createdAt DESC when search params are null', async () => {
+      const { category, genre, castMember } = await createVideoRelations(
+        categoryRepo,
+        genreRepo,
+        castMemberRepo,
+      );
+
+      const createdAt = new Date();
+      const videos = Video.fake()
+        .manyVideosWithoutMedias(5)
+        .addCategoryId(category.categoryId)
+        .addGenreId(genre.genreId)
+        .addCastMemberId(castMember.castMemberId)
+        .withTitle((index) => `Title ${index}`)
+        .withCreatedAt((index) => new Date(createdAt.getTime() + index))
+        .build();
+      await videoRepo.bulkInsert(videos);
+
+      const searchOutput = await videoRepo.search(new VideoSearchParams());
+
+      searchOutput.items.reverse().forEach((_, index) => {
+        expect(`Title ${index}`).toBe(`${videos[index].title}`);
+      });
+    });
+
+    it('should apply filter', async () => {
+      const categories = Category.fake().manyCategories(2).build();
+      await categoryRepo.bulkInsert(categories);
+
+      const genres = Genre.fake()
+        .manyGenres(2)
+        .addCategoryId(categories[0].categoryId)
+        .build();
+      await genreRepo.bulkInsert(genres);
+
+      const castMembers = CastMember.fake().manyCastMembers(2).build();
+      await castMemberRepo.bulkInsert(castMembers);
+
+      const videos = [
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('test')
+          .addCategoryId(categories[0].categoryId)
+          .addGenreId(genres[0].genreId)
+          .addCastMemberId(castMembers[0].castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('other title')
+          .addCategoryId(categories[0].categoryId)
+          .addGenreId(genres[0].genreId)
+          .addCastMemberId(castMembers[0].castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('test')
+          .addCategoryId(categories[1].categoryId)
+          .addGenreId(genres[0].genreId)
+          .addCastMemberId(castMembers[0].castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('test')
+          .addCategoryId(categories[0].categoryId)
+          .addGenreId(genres[1].genreId)
+          .addCastMemberId(castMembers[0].castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('test')
+          .addCategoryId(categories[0].categoryId)
+          .addGenreId(genres[0].genreId)
+          .addCastMemberId(castMembers[1].castMemberId)
+          .build(),
+      ];
+      await videoRepo.bulkInsert(videos);
+
+      const searchOutput = await videoRepo.search(
+        new VideoSearchParams({
+          filter: {
+            title: 'test',
+            categoryIds: [new CategoryId(categories[0].categoryId.id)],
+            genreIds: [new GenreId(genres[0].genreId.id)],
+            castMemberIds: [new CastMemberId(castMembers[0].castMemberId.id)],
+          },
+        }),
+      );
+
+      expect(searchOutput.items).toHaveLength(1);
+      expect(searchOutput.total).toBe(1);
+    });
+
+    it('should apply sort', async () => {
+      expect(genreRepo.sortableFields).toStrictEqual(['name', 'createdAt']);
+
+      const { category, genre, castMember } = await createVideoRelations(
+        categoryRepo,
+        genreRepo,
+        castMemberRepo,
+      );
+
+      const videos = [
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('c')
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('a')
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('b')
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build(),
+      ];
+      await videoRepo.bulkInsert(videos);
+
+      const searchOutput = await videoRepo.search(
+        new VideoSearchParams({
+          sort: 'title',
+          sortDirection: SortDirection.ASC,
+        }),
+      );
+
+      expect(searchOutput.items.map((it) => it.title)).toEqual(
+        [videos[1], videos[2], videos[0]].map((it) => it.title),
+      );
+    });
+
+    it('should apply paginate, sort and filter', async () => {
+      expect(genreRepo.sortableFields).toStrictEqual(['name', 'createdAt']);
+
+      const { category, genre, castMember } = await createVideoRelations(
+        categoryRepo,
+        genreRepo,
+        castMemberRepo,
+      );
+
+      const videos = [
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('other name')
+          .withCreatedAt(new Date(new Date().getTime() + 100))
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('test a')
+          .withCreatedAt(new Date(new Date().getTime() + 200))
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('test b')
+          .withCreatedAt(new Date(new Date().getTime() + 300))
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build(),
+        Video.fake()
+          .oneVideoWithoutMedias()
+          .withTitle('test c')
+          .withCreatedAt(new Date(new Date().getTime() + 400))
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build(),
+      ];
+      await videoRepo.bulkInsert(videos);
+
+      const searchOutput = await videoRepo.search(
+        new VideoSearchParams({
+          page: 1,
+          perPage: 2,
+          sort: 'createdAt',
+          sortDirection: SortDirection.ASC,
+          filter: {
+            title: 'test',
+          },
+        }),
+      );
+
+      expect(searchOutput).toMatchObject({
+        total: 3,
+        currentPage: 1,
+        perPage: 2,
+        lastPage: 2,
+      });
+      expect(searchOutput.items.map((it) => it.title)).toEqual(
+        [videos[1], videos[2]].map((it) => it.title),
       );
     });
   });

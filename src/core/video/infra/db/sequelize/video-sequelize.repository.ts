@@ -2,13 +2,17 @@ import { InvalidArgumentError } from '../../../../shared/domain/errors/invalid-a
 import { NotFoundError } from '../../../../shared/domain/errors/not-found.error';
 import { UnitOfWorkSequelize } from '../../../../shared/infra/db/sequelize/unit-of-work-sequelize';
 import { Video, VideoId } from '../../../domain/video.aggregate';
-import { IVideoRepository } from '../../../domain/video.repository';
+import {
+  IVideoRepository,
+  VideoSearchParams,
+  VideoSearchResult,
+} from '../../../domain/video.repository';
 import { VideoModel } from './video.model';
-import { Op } from 'sequelize';
+import { literal, Op } from 'sequelize';
 import { VideoModelMapper } from './video.mapper';
 
 export class VideoSequelizeRepository implements IVideoRepository {
-  sortableFields: string[] = ['name', 'createdAt'];
+  sortableFields: string[] = ['title', 'createdAt'];
 
   relationsInclude = [
     'categoryIds',
@@ -226,6 +230,161 @@ export class VideoSequelizeRepository implements IVideoRepository {
     if (affectedRows !== 1) {
       throw new NotFoundError(id.id, this.getEntity());
     }
+  }
+
+  async search(props: VideoSearchParams): Promise<VideoSearchResult> {
+    const offset = (props.page - 1) * props.perPage;
+    const limit = props.perPage;
+
+    const videoTableName = this.videoModel.getTableName();
+    const videoCategoryRelation =
+      this.videoModel.associations.categoryIds.target;
+    const videoCategoryTableName = videoCategoryRelation.getTableName();
+    const videoGenreRelation = this.videoModel.associations.genreIds.target;
+    const videoGenreTableName = videoGenreRelation.getTableName();
+    const videoCastMemberRelation =
+      this.videoModel.associations.castMemberIds.target;
+    const videoCastMemberTableName = videoCastMemberRelation.getTableName();
+    const videoAlias = this.videoModel.name;
+
+    const wheres: any[] = [];
+
+    if (
+      props.filter &&
+      (props.filter.title ||
+        props.filter.categoryIds ||
+        props.filter.genreIds ||
+        props.filter.castMemberIds)
+    ) {
+      if (props.filter.title) {
+        wheres.push({
+          field: 'title',
+          value: `%${props.filter.title}%`,
+          get condition() {
+            return {
+              [this.field]: {
+                [Op.like]: this.value,
+              },
+            };
+          },
+          rawCondition: `${videoAlias}.title LIKE :title`,
+        });
+      }
+
+      if (props.filter.categoryIds) {
+        wheres.push({
+          field: 'categoryIds',
+          value: props.filter.categoryIds.map((c) => c.id),
+          get condition() {
+            return {
+              ['$categoryIds.categoryId$']: {
+                [Op.in]: this.value,
+              },
+            };
+          },
+          rawCondition: `${videoCategoryTableName}.categoryId IN (:categoryIds)`,
+        });
+      }
+
+      if (props.filter.genreIds) {
+        wheres.push({
+          field: 'genreIds',
+          value: props.filter.genreIds.map((c) => c.id),
+          get condition() {
+            return {
+              ['$genreIds.genreId$']: {
+                [Op.in]: this.value,
+              },
+            };
+          },
+          rawCondition: `${videoGenreTableName}.genreId IN (:genreIds)`,
+        });
+      }
+
+      if (props.filter.castMemberIds) {
+        wheres.push({
+          field: 'castMemberIds',
+          value: props.filter.castMemberIds.map((c) => c.id),
+          get condition() {
+            return {
+              ['$castMemberIds.castMemberId$']: {
+                [Op.in]: this.value,
+              },
+            };
+          },
+          rawCondition: `${videoCastMemberTableName}.castMemberId IN (:castMemberIds)`,
+        });
+      }
+    }
+
+    const orderBy =
+      props.sort && this.sortableFields.includes(props.sort)
+        ? `${this.videoModel.name}.\`${props.sort}\` ${props.sortDirection}`
+        : `${videoAlias}.\`createdAt\` DESC`;
+
+    const count = await this.videoModel.count({
+      distinct: true,
+      include: [
+        props.filter?.categoryIds && 'categoryIds',
+        props.filter?.genreIds && 'genreIds',
+        props.filter?.castMemberIds && 'castMemberIds',
+      ].filter((i) => i) as string[],
+      where: wheres.length ? { [Op.and]: wheres.map((w) => w.condition) } : {},
+      transaction: this.uow.getTransaction(),
+    });
+
+    const columnOrder = orderBy.replace('binary', '').trim().split(' ')[0];
+
+    const query = [
+      'SELECT',
+      `DISTINCT ${videoAlias}.\`videoId\`,${columnOrder} FROM ${videoTableName} as ${videoAlias}`,
+      props.filter?.categoryIds
+        ? `INNER JOIN ${videoCategoryTableName} ON ${videoAlias}.\`videoId\` = ${videoCategoryTableName}.\`videoId\``
+        : '',
+      props.filter?.genreIds
+        ? `INNER JOIN ${videoGenreTableName} ON ${videoAlias}.\`videoId\` = ${videoGenreTableName}.\`videoId\``
+        : '',
+      props.filter?.castMemberIds
+        ? `INNER JOIN ${videoCastMemberTableName} ON ${videoAlias}.\`videoId\` = ${videoCastMemberTableName}.\`videoId\``
+        : '',
+      wheres.length
+        ? `WHERE ${wheres.map((w) => w.rawCondition).join(' AND ')}`
+        : '',
+      `ORDER BY ${orderBy}`,
+      `LIMIT ${limit}`,
+      `OFFSET ${offset}`,
+    ];
+
+    const [idsResult] = await this.videoModel.sequelize!.query(
+      query.join(' '),
+      {
+        replacements: wheres.reduce(
+          (acc, w) => ({ ...acc, [w.field]: w.value }),
+          {},
+        ),
+        transaction: this.uow.getTransaction(),
+      },
+    );
+
+    const models = await this.videoModel.findAll({
+      where: {
+        videoId: {
+          [Op.in]: idsResult.map(
+            (id: { videoId: string }) => id.videoId,
+          ) as string[],
+        },
+      },
+      include: this.relationsInclude,
+      order: literal(orderBy),
+      transaction: this.uow.getTransaction(),
+    });
+
+    return new VideoSearchResult({
+      items: models.map((m) => VideoModelMapper.toEntity(m)),
+      currentPage: props.page,
+      perPage: props.perPage,
+      total: count,
+    });
   }
 
   getEntity(): new (...args: any[]) => Video {
