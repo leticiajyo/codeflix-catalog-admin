@@ -486,4 +486,345 @@ describe('VideoSequelizeRepository Integration Tests', () => {
       );
     });
   });
+
+  describe('transaction mode', () => {
+    describe('insert method', () => {
+      it('should insert a video', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const video = Video.fake()
+          .oneVideoWithAllMedias()
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        uow.start();
+        await videoRepo.insert(video);
+        await uow.commit();
+
+        const videoCreated = await videoRepo.findById(video.videoId);
+        expect(video.videoId).toBeValueObject(videoCreated!.videoId);
+      });
+
+      it('rollback the insertion', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const video = Video.fake()
+          .oneVideoWithAllMedias()
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await uow.start();
+        await videoRepo.insert(video);
+        await uow.rollback();
+
+        await expect(videoRepo.findById(video.videoId)).resolves.toBeNull();
+        await expect(VideoCategoryModel.count()).resolves.toBe(0);
+        await expect(VideoGenreModel.count()).resolves.toBe(0);
+        await expect(VideoCastMemberModel.count()).resolves.toBe(0);
+        await expect(ImageMediaModel.count()).resolves.toBe(0);
+        await expect(AudioVideoMediaModel.count()).resolves.toBe(0);
+      });
+    });
+
+    describe('bulkInsert method', () => {
+      it('should insert a list of videos', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const videos = Video.fake()
+          .manyVideosWithAllMedias(2)
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await uow.start();
+        await videoRepo.bulkInsert(videos);
+        await uow.commit();
+
+        const [video1, video2] = await Promise.all([
+          videoRepo.findById(videos[0].videoId),
+          videoRepo.findById(videos[1].videoId),
+        ]);
+
+        expect(video1!.videoId).toBeValueObject(videos[0].videoId);
+        expect(video2!.videoId).toBeValueObject(videos[1].videoId);
+      });
+
+      it('rollback the bulk insertion', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const videos = Video.fake()
+          .manyVideosWithAllMedias(2)
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await uow.start();
+        await videoRepo.bulkInsert(videos);
+        await uow.rollback();
+
+        await expect(videoRepo.findById(videos[0].videoId)).resolves.toBeNull();
+        await expect(videoRepo.findById(videos[1].videoId)).resolves.toBeNull();
+        await expect(VideoCategoryModel.count()).resolves.toBe(0);
+        await expect(VideoGenreModel.count()).resolves.toBe(0);
+        await expect(VideoCastMemberModel.count()).resolves.toBe(0);
+        await expect(ImageMediaModel.count()).resolves.toBe(0);
+        await expect(AudioVideoMediaModel.count()).resolves.toBe(0);
+      });
+    });
+
+    describe('findById method', () => {
+      it('should return a video', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const video = Video.fake()
+          .oneVideoWithAllMedias()
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await uow.start();
+        await videoRepo.insert(video);
+        const result = await videoRepo.findById(video.videoId);
+
+        expect(result!.videoId).toBeValueObject(video.videoId);
+        await uow.commit();
+      });
+    });
+
+    describe('findAll method', () => {
+      it('should return a list of videos', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const videos = Video.fake()
+          .manyVideosWithAllMedias(2)
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await uow.start();
+        await videoRepo.bulkInsert(videos);
+        const result = await videoRepo.findAll();
+
+        expect(result.length).toBe(2);
+        await uow.commit();
+      });
+    });
+
+    describe('findByIds method', () => {
+      it('should return a list of videos', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const videos = Video.fake()
+          .manyVideosWithAllMedias(2)
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await uow.start();
+        await videoRepo.bulkInsert(videos);
+        const result = await videoRepo.findByIds(videos.map((v) => v.videoId));
+
+        expect(result.length).toBe(2);
+        await uow.commit();
+      });
+    });
+
+    describe('existsById method', () => {
+      it('should return true if the video exists', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const video = Video.fake()
+          .oneVideoWithAllMedias()
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await uow.start();
+        await videoRepo.insert(video);
+        const existsResult = await videoRepo.existsById([video.videoId]);
+
+        expect(existsResult.exists[0]).toBeValueObject(video.videoId);
+        await uow.commit();
+      });
+    });
+
+    describe('update method', () => {
+      it('should update a video', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const video = Video.fake()
+          .oneVideoWithAllMedias()
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await videoRepo.insert(video);
+        await uow.start();
+        video.changeTitle('new title');
+        await videoRepo.update(video);
+        await uow.commit();
+
+        const result = await videoRepo.findById(video.videoId);
+        expect(result!.title).toBe(video.title);
+      });
+
+      it('rollback the update', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const video = Video.fake()
+          .oneVideoWithAllMedias()
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await videoRepo.insert(video);
+        await uow.start();
+        video.changeTitle('new title');
+        await videoRepo.update(video);
+        await uow.rollback();
+
+        const notChangeVideo = await videoRepo.findById(video.videoId);
+        expect(notChangeVideo!.title).not.toBe(video.title);
+      });
+    });
+
+    describe('delete method', () => {
+      it('should delete a video', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const video = Video.fake()
+          .oneVideoWithAllMedias()
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await videoRepo.insert(video);
+        await uow.start();
+        await videoRepo.delete(video.videoId);
+        await uow.commit();
+
+        await expect(videoRepo.findById(video.videoId)).resolves.toBeNull();
+        await expect(VideoCategoryModel.count()).resolves.toBe(0);
+        await expect(VideoGenreModel.count()).resolves.toBe(0);
+        await expect(VideoCastMemberModel.count()).resolves.toBe(0);
+        await expect(ImageMediaModel.count()).resolves.toBe(0);
+        await expect(AudioVideoMediaModel.count()).resolves.toBe(0);
+      });
+
+      it('rollback the deletion', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const video = Video.fake()
+          .oneVideoWithAllMedias()
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await videoRepo.insert(video);
+        await uow.start();
+        await videoRepo.delete(video.videoId);
+        await uow.rollback();
+
+        const result = await videoRepo.findById(video.videoId);
+        expect(result!.videoId).toBeValueObject(video.videoId);
+        await expect(VideoCategoryModel.count()).resolves.toBe(1);
+        await expect(VideoGenreModel.count()).resolves.toBe(1);
+        await expect(VideoCastMemberModel.count()).resolves.toBe(1);
+        await expect(ImageMediaModel.count()).resolves.toBe(3);
+        await expect(AudioVideoMediaModel.count()).resolves.toBe(2);
+      });
+    });
+
+    describe('search method', () => {
+      it('should return a list of genres', async () => {
+        const { category, genre, castMember } = await createVideoRelations(
+          categoryRepo,
+          genreRepo,
+          castMemberRepo,
+        );
+
+        const genres = Video.fake()
+          .manyVideosWithAllMedias(2)
+          .withTitle('movie')
+          .addCategoryId(category.categoryId)
+          .addGenreId(genre.genreId)
+          .addCastMemberId(castMember.castMemberId)
+          .build();
+
+        await uow.start();
+        await videoRepo.bulkInsert(genres);
+
+        const searchParams = new VideoSearchParams({
+          filter: { title: 'movie' },
+        });
+        const result = await videoRepo.search(searchParams);
+
+        expect(result.items.length).toBe(2);
+        expect(result.total).toBe(2);
+        await uow.commit();
+      });
+    });
+  });
 });
