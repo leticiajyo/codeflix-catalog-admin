@@ -1,7 +1,7 @@
-import { Category, CategoryId } from '@core/category/domain/category.aggregate';
+import { CategoryId } from '@core/category/domain/category.aggregate';
 import { CategorySequelizeRepository } from '@core/category/infra/db/sequelize/category-sequelize.repository';
 import { CategoryModel } from '@core/category/infra/db/sequelize/category.model';
-import { GenreId, Genre } from '@core/genre/domain/genre.aggregate';
+import { GenreId } from '@core/genre/domain/genre.aggregate';
 import { GenreSequelizeRepository } from '@core/genre/infra/db/sequelize/genre-sequelize.repository';
 import { GenreModel } from '@core/genre/infra/db/sequelize/genre.model';
 import { UnitOfWorkSequelize } from '@core/shared/infra/db/sequelize/unit-of-work-sequelize';
@@ -15,7 +15,7 @@ import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequel
 import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-member.model';
 import { VideoModel } from '@core/video/infra/db/sequelize/video.model';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
-import { Rating, Video, VideoId } from '@core/video/domain/video.aggregate';
+import { Video, VideoId } from '@core/video/domain/video.aggregate';
 import { CastMemberId } from '@core/cast-member/domain/cast-member.aggregate';
 
 describe('Get Video Use Case', () => {
@@ -58,31 +58,27 @@ describe('Get Video Use Case', () => {
         castMemberRepo,
       );
 
-      const video = Video.create({
-        title: 'test video',
-        description: 'test description',
-        yearLaunched: 2021,
-        duration: 90,
-        rating: Rating.R10,
-        isOpened: true,
+      const videoFake = Video.fake().oneVideoWithoutMedias().build();
+      const entity = Video.create({
+        ...videoFake,
         categoryIds: [new CategoryId(category.categoryId.id)],
         genreIds: [new GenreId(genre.genreId.id)],
         castMemberIds: [new CastMemberId(castMember.castMemberId.id)],
       });
-      await videoRepo.insert(video);
+      await videoRepo.insert(entity);
 
-      const output = await useCase.execute({ id: video.videoId.id });
+      const output = await useCase.execute({ id: entity.videoId.id });
 
       expect(output).toStrictEqual({
-        id: video.videoId.id,
-        title: video.title,
-        description: video.description,
-        yearLaunched: video.yearLaunched,
-        duration: video.duration,
-        rating: video.rating,
-        isOpened: video.isOpened,
-        isPublished: video.isPublished,
-        createdAt: video.createdAt,
+        id: entity.videoId.id,
+        title: entity.title,
+        description: entity.description,
+        yearLaunched: entity.yearLaunched,
+        duration: entity.duration,
+        rating: entity.rating,
+        isOpened: entity.isOpened,
+        isPublished: entity.isPublished,
+        createdAt: entity.createdAt,
         categoryIds: [category.categoryId.id],
         categories: [
           {
