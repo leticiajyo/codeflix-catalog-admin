@@ -3,7 +3,6 @@ import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-membe
 import { CategoryId } from '@core/category/domain/category.aggregate';
 import { CategorySequelizeRepository } from '@core/category/infra/db/sequelize/category-sequelize.repository';
 import { CategoryModel } from '@core/category/infra/db/sequelize/category.model';
-import { GenreId } from '@core/genre/domain/genre.aggregate';
 import { GenreSequelizeRepository } from '@core/genre/infra/db/sequelize/genre-sequelize.repository';
 import { GenreModel } from '@core/genre/infra/db/sequelize/genre.model';
 import { UnitOfWorkSequelize } from '@core/shared/infra/db/sequelize/unit-of-work-sequelize';
@@ -14,7 +13,6 @@ import {
 import { VideoSequelizeRepository } from '@core/video/infra/db/sequelize/video-sequelize.repository';
 import { VideoModel } from '@core/video/infra/db/sequelize/video.model';
 import { UpdateVideoUseCase } from '../update-video.use-case';
-import { CastMemberId } from '@core/cast-member/domain/cast-member.aggregate';
 import { Video, Rating, VideoId } from '@core/video/domain/video.aggregate';
 import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
 
@@ -50,13 +48,12 @@ describe('Update Genre Use Case Integration Tests', () => {
         genreRepo,
         castMemberRepo,
       );
-      const videoFake = Video.fake().oneVideoWithoutMedias().build();
-      const entity = Video.create({
-        ...videoFake,
-        categoryIds: [new CategoryId(category.categoryId.id)],
-        genreIds: [new GenreId(genre.genreId.id)],
-        castMemberIds: [new CastMemberId(castMember.castMemberId.id)],
-      });
+      const entity = Video.fake()
+        .oneVideoWithoutMedias()
+        .addCategoryId(category.categoryId)
+        .addGenreId(genre.genreId)
+        .addCastMemberId(castMember.castMemberId)
+        .build();
       await videoRepo.insert(entity);
 
       const {
@@ -114,13 +111,12 @@ describe('Update Genre Use Case Integration Tests', () => {
         genreRepo,
         castMemberRepo,
       );
-      const videoFake = Video.fake().oneVideoWithoutMedias().build();
-      const entity = Video.create({
-        ...videoFake,
-        categoryIds: [new CategoryId(category.categoryId.id)],
-        genreIds: [new GenreId(genre.genreId.id)],
-        castMemberIds: [new CastMemberId(castMember.castMemberId.id)],
-      });
+      const entity = Video.fake()
+        .oneVideoWithoutMedias()
+        .addCategoryId(category.categoryId)
+        .addGenreId(genre.genreId)
+        .addCastMemberId(castMember.castMemberId)
+        .build();
       await videoRepo.insert(entity);
 
       const nonExistingCategoryId = new CategoryId();
