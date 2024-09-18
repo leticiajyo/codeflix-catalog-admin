@@ -12,6 +12,7 @@ import {
   InvalidMediaFileMimeTypeError,
   InvalidMediaFileSizeError,
 } from '@core/shared/domain/validators/media-file.validator';
+import { IStorage } from '@core/shared/application/storage.interface';
 
 export type UploadImageMediasOutput = void;
 
@@ -21,6 +22,7 @@ export class UploadImageMediasUseCase
   constructor(
     private uow: IUnitOfWork,
     private videoRepo: IVideoRepository,
+    private storage: IStorage,
   ) {}
 
   async execute(
