@@ -1,33 +1,33 @@
 import {
-  IsIn,
   IsNotEmpty,
   IsString,
   IsUUID,
+  IsIn,
   ValidateNested,
   validateSync,
 } from 'class-validator';
 import { FileMediaInput } from '../../common/file-media.input';
 
-export type UploadImageMediasInputConstructorProps = {
+export type UploadAudioVideoMediaInputConstructorProps = {
   videoId: string;
-  field: 'banner' | 'thumbnail' | 'thumbnail_half';
+  field: 'trailer' | 'video';
   file: FileMediaInput;
 };
 
-export class UploadImageMediasInput {
+export class UploadAudioVideoMediaInput {
   @IsUUID('4')
   @IsString()
   @IsNotEmpty()
   videoId: string;
 
-  @IsIn(['banner', 'thumbnail', 'thumbnail_half'])
+  @IsIn(['trailer', 'video'])
   @IsNotEmpty()
-  field: 'banner' | 'thumbnail' | 'thumbnail_half';
+  field: 'trailer' | 'video';
 
   @ValidateNested()
   file: FileMediaInput;
 
-  constructor(props: UploadImageMediasInputConstructorProps) {
+  constructor(props?: UploadAudioVideoMediaInputConstructorProps) {
     if (!props) return;
 
     this.videoId = props.videoId;
@@ -35,9 +35,8 @@ export class UploadImageMediasInput {
     this.file = props.file;
   }
 }
-
-export class ValidateUploadImageMediasInput {
-  static validate(input: UploadImageMediasInput) {
+export class ValidateUploadVideoMediaInput {
+  static validate(input: UploadAudioVideoMediaInput) {
     return validateSync(input);
   }
 }
