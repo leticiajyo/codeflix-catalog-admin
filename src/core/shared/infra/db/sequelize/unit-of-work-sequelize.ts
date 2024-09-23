@@ -1,8 +1,10 @@
 import { Sequelize, Transaction } from 'sequelize';
 import { IUnitOfWork } from '../../../domain/repository/unit-of-work.interface';
+import { AggregateRoot } from '@core/shared/domain/aggregate-root';
 
 export class UnitOfWorkSequelize implements IUnitOfWork {
   private transaction: Transaction | null;
+  private aggregateRoots: Set<AggregateRoot> = new Set<AggregateRoot>();
 
   constructor(private sequelize: Sequelize) {}
 
@@ -58,5 +60,13 @@ export class UnitOfWorkSequelize implements IUnitOfWork {
 
   getTransaction() {
     return this.transaction;
+  }
+
+  addAggregateRoot(aggregateRoot: AggregateRoot): void {
+    this.aggregateRoots.add(aggregateRoot);
+  }
+
+  getAggregateRoots(): AggregateRoot[] {
+    return [...this.aggregateRoots];
   }
 }

@@ -1,6 +1,5 @@
 import { IStorage } from '@core/shared/application/storage.interface';
 import { IUseCase } from '@core/shared/application/use-case.interface';
-import { IUnitOfWork } from '@core/shared/domain/repository/unit-of-work.interface';
 import { EntityValidationError } from '@core/shared/domain/validators/validation.error';
 import { Trailer } from '@core/video/domain/trailer.vo';
 import { VideoMedia } from '@core/video/domain/video-media.vo';
@@ -12,6 +11,7 @@ import {
   InvalidMediaFileSizeError,
   InvalidMediaFileMimeTypeError,
 } from '@core/shared/domain/validators/media-file.validator';
+import { ApplicationService } from '@core/shared/application/application.service';
 
 export type UploadAudioVideoMediaOutput = void;
 
@@ -19,7 +19,7 @@ export class UploadAudioVideoMediasUseCase
   implements IUseCase<UploadAudioVideoMediaInput, UploadAudioVideoMediaOutput>
 {
   constructor(
-    private uow: IUnitOfWork,
+    private appService: ApplicationService,
     private videoRepo: IVideoRepository,
     private storage: IStorage,
   ) {}
@@ -55,7 +55,7 @@ export class UploadAudioVideoMediasUseCase
         mimeType: input.file.mimeType,
       });
 
-      await this.uow.do(async () => {
+      await this.appService.run(async () => {
         return this.videoRepo.update(video);
       });
     } catch (error) {

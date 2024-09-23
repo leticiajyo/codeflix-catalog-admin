@@ -18,6 +18,9 @@ import { VideoSequelizeRepository } from '@core/video/infra/db/sequelize/video-s
 import { VideoModel } from '@core/video/infra/db/sequelize/video.model';
 import { NotFoundError } from '@core/shared/domain/errors/not-found.error';
 import { UploadAudioVideoMediasUseCase } from '../upload-audio-video-medias.use-case';
+import EventEmitter2 from 'eventemitter2';
+import { ApplicationService } from '@core/shared/application/application.service';
+import { DomainEventMediator } from '@core/shared/domain/events/domain-event-mediator';
 
 describe('Upload Audio Video Medias Use Case', () => {
   let uploadAudioVideoMediasUseCase: UploadAudioVideoMediasUseCase;
@@ -27,9 +30,14 @@ describe('Upload Audio Video Medias Use Case', () => {
   let castMemberRepo: CastMemberSequelizeRepository;
   let uow: UnitOfWorkSequelize;
   let storageService: IStorage;
+  let domainEventMediator: DomainEventMediator;
+  let applicationService: ApplicationService;
   const sequelizeHelper = setupSequelizeForVideo();
 
   beforeEach(() => {
+    const eventEmitter = new EventEmitter2();
+    domainEventMediator = new DomainEventMediator(eventEmitter);
+    applicationService = new ApplicationService(uow, domainEventMediator);
     uow = new UnitOfWorkSequelize(sequelizeHelper.sequelize);
     categoryRepo = new CategorySequelizeRepository(CategoryModel);
     genreRepo = new GenreSequelizeRepository(GenreModel, uow);
@@ -38,7 +46,7 @@ describe('Upload Audio Video Medias Use Case', () => {
     storageService = new InMemoryStorage();
 
     uploadAudioVideoMediasUseCase = new UploadAudioVideoMediasUseCase(
-      uow,
+      applicationService,
       videoRepo,
       storageService,
     );
