@@ -57,14 +57,7 @@ export class VideoModel extends Model<VideoModelProps> {
 
   @Column({
     allowNull: false,
-    type: DataType.ENUM(
-      Rating.RL,
-      Rating.R10,
-      Rating.R12,
-      Rating.R14,
-      Rating.R16,
-      Rating.R18,
-    ),
+    type: DataType.ENUM(...Object.values(Rating)),
   })
   declare rating: Rating;
 

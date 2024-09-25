@@ -10,6 +10,13 @@ async function bootstrap() {
 
   const sequelize = app.get(getConnectionToken());
 
-  migrator(sequelize).runAsCLI();
+  try {
+    await migrator(sequelize).runAsCLI();
+  } catch (error) {
+    console.error('Migration failed', error);
+  } finally {
+    await app.close();
+  }
 }
+
 bootstrap();

@@ -5,8 +5,32 @@ import { ConfigService } from '@nestjs/config';
 import { CONFIG_SCHEMA_TYPE } from 'src/nest-modules/config/config.module';
 import { UnitOfWorkSequelize } from '../../core/shared/infra/db/sequelize/unit-of-work-sequelize';
 import { Sequelize } from 'sequelize';
+import { CastMemberModel } from '@core/cast-member/infra/db/sequelize/cast-member.model';
+import {
+  GenreModel,
+  GenreCategoryModel,
+} from '@core/genre/infra/db/sequelize/genre.model';
+import { AudioVideoMediaModel } from '@core/video/infra/db/sequelize/audio-video-media.model';
+import { ImageMediaModel } from '@core/video/infra/db/sequelize/image-media.model';
+import {
+  VideoModel,
+  VideoCategoryModel,
+  VideoCastMemberModel,
+  VideoGenreModel,
+} from '@core/video/infra/db/sequelize/video.model';
 
-const models = [CategoryModel];
+const models = [
+  CategoryModel,
+  GenreModel,
+  GenreCategoryModel,
+  CastMemberModel,
+  VideoModel,
+  VideoCategoryModel,
+  VideoCastMemberModel,
+  VideoGenreModel,
+  ImageMediaModel,
+  AudioVideoMediaModel,
+];
 
 @Global()
 @Module({
