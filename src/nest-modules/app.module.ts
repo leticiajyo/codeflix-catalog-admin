@@ -5,6 +5,7 @@ import { ConfigModule } from './config/config.module';
 import { SharedModule } from './shared/shared.module';
 import { CastMembersModule } from './cast-members/cast-members.module';
 import { GenresModule } from './genres/genres.module';
+import { VideosModule } from './videos/videos.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { GenresModule } from './genres/genres.module';
     CategoriesModule,
     CastMembersModule,
     GenresModule,
+    VideosModule,
   ],
   controllers: [],
   providers: [],
