@@ -15,6 +15,8 @@ import {
 } from '@nestjs/common';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
+import { VideoOutput } from '@core/video/application/common/video.output';
+import { VideoPresenter } from './videos.presenter';
 
 @Controller('videos')
 export class VideosController {
@@ -32,8 +34,9 @@ export class VideosController {
 
   @Post()
   async create(@Body() createVideoDto: CreateVideoDto) {
-    // const { id } = await this.createUseCase.execute(createVideoDto);
-    // return await this.getUseCase.execute({ id });
+    const { id } = await this.createUseCase.execute(createVideoDto);
+    const video = await this.getUseCase.execute({ id });
+    return VideosController.serialize(video);
   }
 
   @Patch(':id')
@@ -46,7 +49,8 @@ export class VideosController {
   async findOne(
     @Param('id', new ParseUUIDPipe({ errorHttpStatusCode: 400 })) id: string,
   ) {
-    // return await this.getUseCase.execute({ id });
+    const video = await this.getUseCase.execute({ id });
+    return VideosController.serialize(video);
   }
 
   @Patch(':id/upload')
@@ -55,4 +59,8 @@ export class VideosController {
     @Body()
     data,
   ) {}
+
+  static serialize(output: VideoOutput) {
+    return new VideoPresenter(output);
+  }
 }
