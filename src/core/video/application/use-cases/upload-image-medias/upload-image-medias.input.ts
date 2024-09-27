@@ -27,7 +27,7 @@ export class UploadImageMediasInput {
   @ValidateNested()
   file: FileMediaInput;
 
-  constructor(props: UploadImageMediasInputConstructorProps) {
+  constructor(props?: UploadImageMediasInputConstructorProps) {
     if (!props) return;
 
     this.videoId = props.videoId;

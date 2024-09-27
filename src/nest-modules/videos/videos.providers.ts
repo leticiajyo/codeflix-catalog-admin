@@ -18,6 +18,7 @@ import { UploadAudioVideoMediasUseCase } from '@core/video/application/use-cases
 import { CAST_MEMBERS_PROVIDERS } from '../cast-members/cast-members.providers';
 import { CATEGORY_PROVIDERS } from '../categories/categories.providers';
 import { GENRES_PROVIDERS } from '../genres/genres.providers';
+import { UploadImageMediasUseCase } from '@core/video/application/use-cases/upload-image-medias/upload-image-medias.use-case';
 
 export const REPOSITORIES = {
   VIDEO_REPOSITORY: {
@@ -96,6 +97,17 @@ export const USE_CASES = {
       storage: IStorage,
     ) => {
       return new UploadAudioVideoMediasUseCase(appService, videoRepo, storage);
+    },
+    inject: ['UnitOfWork', REPOSITORIES.VIDEO_REPOSITORY.provide, 'IStorage'],
+  },
+  UPLOAD_IMAGE_MEDIA_USE_CASE: {
+    provide: UploadImageMediasUseCase,
+    useFactory: (
+      uow: IUnitOfWork,
+      videoRepo: IVideoRepository,
+      storage: IStorage,
+    ) => {
+      return new UploadImageMediasUseCase(uow, videoRepo, storage);
     },
     inject: [
       ApplicationService,

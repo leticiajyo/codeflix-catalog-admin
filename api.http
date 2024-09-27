@@ -113,3 +113,30 @@ Content-Type: application/json
     ]
 }
 ###
+
+### Invalid update Video request
+PATCH http://localhost:3000/videos/{{videoId}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary1234
+
+------WebKitFormBoundary1234
+Content-Disposition: form-data; name="video"; filename="video.mp4"
+Content-Type: video/mp4
+
+< ./package.json
+------WebKitFormBoundary1234
+Content-Disposition: form-data; name="title"
+Content-Type: text/plain
+
+video teste
+------WebKitFormBoundary1234--
+
+### Upload Video file
+PATCH http://localhost:3000/videos/{{videoId}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary1234
+
+------WebKitFormBoundary1234
+Content-Disposition: form-data; name="video"; filename="video.mp4"
+Content-Type: video/mp4
+
+< ./package.json
+------WebKitFormBoundary1234--
