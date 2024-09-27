@@ -87,5 +87,29 @@ Content-Type: application/json
 
 @videoId = {{createVideo.response.body.data.id}}
 
-###
+### Find One Video
 GET http://localhost:3000/videos/{{videoId}}
+
+### Update Video
+# @name updateVideo
+PATCH http://localhost:3000/videos/{{videoId}}
+Content-Type: application/json
+
+{
+    "title": "Video 1aaaa",
+    "description": "Description 1aaaa",
+    "yearLaunched": 2021,
+    "isOpened": true,
+    "rating": "L",
+    "duration": 90,
+    "categoryIds": [
+        "{{categoryId}}"
+    ],
+    "genreIds": [
+        "{{genreId}}"
+    ],
+    "castMemberIds": [
+        "{{castMemberId}}"
+    ]
+}
+###

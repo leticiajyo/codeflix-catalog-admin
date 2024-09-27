@@ -12,11 +12,13 @@ import {
   Inject,
   ParseUUIDPipe,
   UploadedFiles,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CreateVideoDto } from './dto/create-video.dto';
 import { UpdateVideoDto } from './dto/update-video.dto';
 import { VideoOutput } from '@core/video/application/common/video.output';
 import { VideoPresenter } from './videos.presenter';
+import { UpdateVideoInput } from '@core/video/application/use-cases/update-video/update-video.input';
 
 @Controller('videos')
 export class VideosController {
@@ -42,8 +44,24 @@ export class VideosController {
   @Patch(':id')
   async update(
     @Param('id', new ParseUUIDPipe({ errorHttpStatusCode: 400 })) id: string,
-    @Body() updateVideoDto: UpdateVideoDto,
-  ) {}
+    @Body() updateVideoDto: any,
+  ) {
+    const hasData = Object.keys(updateVideoDto).length > 0;
+
+    if (hasData) {
+      const data = await new ValidationPipe({
+        errorHttpStatusCode: 400,
+      }).transform(updateVideoDto, {
+        metatype: UpdateVideoDto,
+        type: 'body',
+      });
+
+      const input = new UpdateVideoInput({ id, ...data });
+      const { id: newId } = await this.updateUseCase.execute(input);
+      const video = await this.getUseCase.execute({ id: newId });
+      return VideosController.serialize(video);
+    }
+  }
 
   @Get(':id')
   async findOne(
