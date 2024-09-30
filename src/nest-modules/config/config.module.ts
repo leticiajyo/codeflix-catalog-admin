@@ -63,13 +63,26 @@ type CONFIG_GOOGLE_SCHEMA_TYPE = {
   GOOGLE_CLOUD_CREDENTIALS: object;
   GOOGLE_CLOUD_STORAGE_BUCKET_NAME: string;
 };
+
 export const CONFIG_GOOGLE_SCHEMA: Joi.StrictSchemaMap<CONFIG_GOOGLE_SCHEMA_TYPE> =
   {
     GOOGLE_CLOUD_CREDENTIALS: joiJson.object().required(),
     GOOGLE_CLOUD_STORAGE_BUCKET_NAME: Joi.string().required(),
   };
 
-export type CONFIG_SCHEMA_TYPE = DB_SCHEMA_TYPE & CONFIG_GOOGLE_SCHEMA_TYPE;
+type EVN_SCHEMA_TYPE = {
+  NODE_ENV: string;
+};
+
+export const CONFIG_ENV_SCHEMA: Joi.StrictSchemaMap<EVN_SCHEMA_TYPE> = {
+  NODE_ENV: Joi.string()
+    .valid('dev', 'stg', 'production', 'test', 'e2e')
+    .required(),
+};
+
+export type CONFIG_SCHEMA_TYPE = DB_SCHEMA_TYPE &
+  CONFIG_GOOGLE_SCHEMA_TYPE &
+  EVN_SCHEMA_TYPE;
 
 @Module({})
 export class ConfigModule extends NestConfigModule {
@@ -86,6 +99,7 @@ export class ConfigModule extends NestConfigModule {
       validationSchema: Joi.object({
         ...CONFIG_DB_SCHEMA,
         ...CONFIG_GOOGLE_SCHEMA,
+        ...CONFIG_ENV_SCHEMA,
       }),
       ...otherOptions,
     });
