@@ -2,16 +2,20 @@ import { Module } from '@nestjs/common';
 import { CategoriesModule } from './categories/categories.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from './config/config.module';
-import { SharedModule } from './shared/shared.module';
 import { CastMembersModule } from './cast-members/cast-members.module';
 import { GenresModule } from './genres/genres.module';
 import { VideosModule } from './videos/videos.module';
+import { EventModule } from './event/event.module';
+import { UseCaseModule } from './use-case/use-case.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     DatabaseModule,
-    SharedModule,
+    StorageModule,
+    EventModule,
+    UseCaseModule,
     CategoriesModule,
     CastMembersModule,
     GenresModule,
