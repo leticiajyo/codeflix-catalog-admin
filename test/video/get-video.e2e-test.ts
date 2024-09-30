@@ -7,13 +7,15 @@ import { GenreSequelizeRepository } from '@core/genre/infra/db/sequelize/genre-s
 import { createVideoRelations } from '@core/video/infra/db/sequelize/testing/video-sequelize.helper';
 import { CastMemberSequelizeRepository } from '@core/cast-member/infra/db/sequelize/cast-member-sequelize.repository';
 import { CAST_MEMBERS_PROVIDERS } from 'src/nest-modules/cast-members/cast-members.providers';
-import { CreateVideoDto } from 'src/nest-modules/videos/dto/create-video.dto';
-import { Rating, VideoId } from '@core/video/domain/video.aggregate';
+import { Video } from '@core/video/domain/video.aggregate';
 import { VIDEOS_PROVIDERS } from 'src/nest-modules/videos/videos.providers';
 import { VideoOutputMapper } from '@core/video/application/common/video.output';
 import { VideosController } from 'src/nest-modules/videos/videos.controller';
 import { instanceToPlain } from 'class-transformer';
 import { VideoSequelizeRepository } from '@core/video/infra/db/sequelize/video-sequelize.repository';
+import { CastMemberId } from '@core/cast-member/domain/cast-member.aggregate';
+import { CategoryId } from '@core/category/domain/category.aggregate';
+import { GenreId } from '@core/genre/domain/genre.aggregate';
 
 describe('E2E Videos Controller', () => {
   const appHelper = startApp();
@@ -37,63 +39,17 @@ describe('E2E Videos Controller', () => {
     );
   });
 
-  describe('/videos (POST)', () => {
-    it('should return a response error with status 400 when request body is invalid', async () => {
-      const sendData = {
-        title: 'test video',
-        description: 'test description',
-        yearLaunched: 2021,
-        duration: 90,
-        rating: Rating.R10,
-        isOpened: true,
-      };
+  describe('/videos/:id (POST)', () => {
+    it('should return a response error when video is not found', async () => {
+      const videoId = 'defa0016-7b96-45ab-8f6b-b339b6409f39';
 
       await request(appHelper.app.getHttpServer())
-        .post('/videos')
-        .send(sendData)
-        .expect(400)
+        .get(`/videos/${videoId}`)
+        .expect(404)
         .expect({
-          message: [
-            'categoryIds should not be empty',
-            'categoryIds must be an array',
-            'each value in categoryIds must be a UUID',
-            'genreIds should not be empty',
-            'genreIds must be an array',
-            'each value in genreIds must be a UUID',
-            'castMemberIds should not be empty',
-            'castMemberIds must be an array',
-            'each value in castMemberIds must be a UUID',
-          ],
-          error: 'Bad Request',
-          statusCode: 400,
-        });
-    });
-
-    it('should return a response error with status 422 when EntityValidationError is thrown', async () => {
-      const sendData = {
-        title: 'test video',
-        description: 'test description',
-        yearLaunched: 2021,
-        duration: 90,
-        rating: Rating.R10,
-        isOpened: true,
-        categoryIds: ['f7e697bd-8fab-4e53-852c-709031461462'],
-        genreIds: ['e533123b-ed89-4ab1-aed1-27d37785549a'],
-        castMemberIds: ['3ed5e31e-c375-4c2f-b736-a18e6d312eb0'],
-      };
-
-      await request(appHelper.app.getHttpServer())
-        .post('/videos')
-        .send(sendData)
-        .expect(422)
-        .expect({
-          statusCode: 422,
-          error: 'Unprocessable Entity',
-          message: [
-            'Category Not Found using ID f7e697bd-8fab-4e53-852c-709031461462',
-            'Genre Not Found using ID e533123b-ed89-4ab1-aed1-27d37785549a',
-            'CastMember Not Found using ID 3ed5e31e-c375-4c2f-b736-a18e6d312eb0',
-          ],
+          statusCode: 404,
+          error: 'Not Found',
+          message: `Video Not Found using ID ${videoId}`,
         });
     });
 
@@ -104,30 +60,22 @@ describe('E2E Videos Controller', () => {
         castMemberRepo,
       );
 
-      const sendData: CreateVideoDto = {
-        title: 'test video',
-        description: 'test description',
-        yearLaunched: 2021,
-        duration: 90,
-        rating: Rating.R10,
-        isOpened: true,
-        categoryIds: [category.categoryId.id],
-        genreIds: [genre.genreId.id],
-        castMemberIds: [castMember.castMemberId.id],
-      };
+      const videoFake = Video.fake().oneVideoWithoutMedias().build();
+      const entity = Video.create({
+        ...videoFake,
+        categoryIds: [new CategoryId(category.categoryId.id)],
+        genreIds: [new GenreId(genre.genreId.id)],
+        castMemberIds: [new CastMemberId(castMember.castMemberId.id)],
+      });
+      await videoRepo.insert(entity);
 
       const res = await request(appHelper.app.getHttpServer())
-        .post('/videos')
-        .send(sendData)
-        .expect(201);
-
-      const id = res.body.data.id;
-      const videoCreated = await videoRepo.findById(new VideoId(id));
-      expect(videoCreated).toBeDefined();
+        .get(`/videos/${entity.videoId.id}`)
+        .expect(200);
 
       const presenter = VideosController.serialize(
         VideoOutputMapper.toOutput({
-          video: videoCreated,
+          video: entity,
           allCategoriesOfVideoAndGenre: [category],
           genres: [genre],
           castMembers: [castMember],
@@ -135,10 +83,7 @@ describe('E2E Videos Controller', () => {
       );
       const serialized = instanceToPlain(presenter);
       expect(res.body.data).toStrictEqual({
-        id: serialized.id,
-        createdAt: serialized.createdAt,
-        isPublished: false,
-        ...sendData,
+        ...serialized,
         categories: expect.arrayContaining([
           {
             id: category.categoryId.id,
