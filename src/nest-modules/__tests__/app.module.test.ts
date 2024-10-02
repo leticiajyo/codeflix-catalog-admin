@@ -8,5 +8,7 @@ describe('App Module', () => {
     }).compile();
 
     expect(module).toBeDefined();
+
+    module.close();
   });
 });
