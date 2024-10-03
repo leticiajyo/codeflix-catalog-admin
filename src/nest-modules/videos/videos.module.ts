@@ -13,6 +13,7 @@ import { AudioVideoMediaModel } from '../../core/video/infra/db/sequelize/audio-
 import { CastMembersModule } from '../cast-members/cast-members.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { GenresModule } from '../genres/genres.module';
+import { RabbitmqModule } from '../rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { GenresModule } from '../genres/genres.module';
       ImageMediaModel,
       AudioVideoMediaModel,
     ]),
+    RabbitmqModule.forFeature(),
     CategoriesModule,
     GenresModule,
     CastMembersModule,

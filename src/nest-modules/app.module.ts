@@ -8,7 +8,7 @@ import { VideosModule } from './videos/videos.module';
 import { EventModule } from './event/event.module';
 import { UseCaseModule } from './use-case/use-case.module';
 import { StorageModule } from './storage/storage.module';
-import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -21,9 +21,7 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
     CastMembersModule,
     GenresModule,
     VideosModule,
-    RabbitMQModule.forRoot(RabbitMQModule, {
-      uri: 'amqp://admin:admin@rabbitmq:5672',
-    }),
+    RabbitmqModule.forRoot(),
   ],
   controllers: [],
   providers: [],

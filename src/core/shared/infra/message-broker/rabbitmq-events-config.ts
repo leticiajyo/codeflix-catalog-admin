@@ -1,4 +1,4 @@
-import { AudioVideoMediaReplaced } from '@core/video/domain/events/video-audio-media-replaced.event';
+import { AudioVideoMediaReplaced } from '@core/video/domain/events/audio-video-media-replaced.event';
 
 export type RabbitMQEventsConfig = {
   [key: string]: {
