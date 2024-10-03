@@ -42,13 +42,18 @@ describe('Application Service', () => {
     it('should call the publish method of domain event mediator and the commit method', async () => {
       const aggregateRoot = new StubAggregateRoot();
       uow.addAggregateRoot(aggregateRoot);
-      const publishSpy = jest.spyOn(domainEventMediator, 'publish');
       const commitSpy = jest.spyOn(uow, 'commit');
+      const publishDomainEventSpy = jest.spyOn(domainEventMediator, 'publish');
+      const publishIntegrationEventSpy = jest.spyOn(
+        domainEventMediator,
+        'publishIntegrationEvents',
+      );
 
       await applicationService.finish();
 
-      expect(publishSpy).toHaveBeenCalledWith(aggregateRoot);
       expect(commitSpy).toHaveBeenCalled();
+      expect(publishDomainEventSpy).toHaveBeenCalledWith(aggregateRoot);
+      expect(publishIntegrationEventSpy).toHaveBeenCalledWith(aggregateRoot);
     });
   });
 
