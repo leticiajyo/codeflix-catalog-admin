@@ -10,7 +10,7 @@ import { VideoMedia } from './video-media.vo';
 import { VideoValidator } from './video.validator';
 import { ThumbnailHalf } from './thumbnail-half.vo';
 import { VideoFakeBuilder } from './video-fake.builder';
-import { AudioVideoMediaReplaced } from './events/video-audio-media-replaced.event';
+import { AudioVideoMediaReplaced } from './events/audio-video-media-replaced.event';
 import { VideoCreatedEvent } from './events/video-created.event';
 import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
 

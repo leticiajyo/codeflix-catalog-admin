@@ -1,5 +1,8 @@
 import { Uuid } from '@core/shared/domain/value-objects/uuid.vo';
-import { IDomainEvent } from '../../../shared/domain/events/domain-event.interface';
+import {
+  IDomainEvent,
+  IIntegrationEvent,
+} from '../../../shared/domain/events/event.interface';
 import { Trailer } from '../trailer.vo';
 import { VideoMedia } from '../video-media.vo';
 import { VideoId } from '../video.aggregate';
@@ -24,5 +27,28 @@ export class AudioVideoMediaReplaced implements IDomainEvent {
     this.mediaType = props.mediaType;
     this.occurredOn = new Date();
     this.eventVersion = 1;
+  }
+
+  getIntegrationEvent(): AudioVideoMediaUploadedIntegrationEvent {
+    return new AudioVideoMediaUploadedIntegrationEvent(this);
+  }
+}
+
+export class AudioVideoMediaUploadedIntegrationEvent
+  implements IIntegrationEvent
+{
+  occurredOn: Date;
+  eventVersion: number;
+  eventName: string;
+  payload: any;
+
+  constructor(event: AudioVideoMediaReplaced) {
+    this.occurredOn = event.occurredOn;
+    this.eventVersion = event.eventVersion;
+    this.eventName = this.constructor.name;
+    this.payload = {
+      videoId: event.aggregateId.id,
+      media: event.media.toJSON(),
+    };
   }
 }

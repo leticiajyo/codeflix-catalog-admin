@@ -3,7 +3,7 @@ import { AggregateRoot } from '../../aggregate-root';
 import { ValueObject } from '../../value-object';
 import { Uuid } from '../../value-objects/uuid.vo';
 import { DomainEventMediator } from '../domain-event-mediator';
-import { IDomainEvent } from '../domain-event.interface';
+import { IDomainEvent } from '../event.interface';
 
 class StubEvent implements IDomainEvent {
   occurredOn: Date;

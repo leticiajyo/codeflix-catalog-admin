@@ -1,5 +1,5 @@
 import { ChannelWrapper } from 'amqp-connection-manager';
-import { IDomainEvent } from '../../../domain/events/domain-event.interface';
+import { IDomainEvent } from '../../../domain/events/event.interface';
 import { Uuid } from '../../../domain/value-objects/uuid.vo';
 import { RabbitMQMessageBroker } from '../rabbitmq';
 import { RabbitMQEventsConfig } from '../rabbitmq-events-config';

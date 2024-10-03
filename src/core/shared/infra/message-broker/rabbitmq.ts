@@ -1,6 +1,6 @@
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { IMessageBroker } from '../../application/message-broker.interface';
-import { IDomainEvent } from '../../domain/events/domain-event.interface';
+import { IDomainEvent } from '../../domain/events/event.interface';
 import { RabbitMQEventsConfig } from './rabbitmq-events-config';
 
 export class RabbitMQMessageBroker implements IMessageBroker {

@@ -8,7 +8,7 @@ import { ThumbnailHalf } from '../thumbnail-half.vo';
 import { Thumbnail } from '../thumbnail.vo';
 import { Trailer } from '../trailer.vo';
 import { VideoMedia } from '../video-media.vo';
-import { AudioVideoMediaReplaced } from '../events/video-audio-media-replaced.event';
+import { AudioVideoMediaReplaced } from '../events/audio-video-media-replaced.event';
 
 describe('Video Aggregate', () => {
   let validateSpy: jest.SpyInstance;

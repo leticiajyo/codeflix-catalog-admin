@@ -1,4 +1,4 @@
-import { IDomainEvent } from '../../../domain/events/domain-event.interface';
+import { IDomainEvent } from '../../../domain/events/event.interface';
 import { Uuid } from '../../../domain/value-objects/uuid.vo';
 import { AmqpConnection } from '@golevelup/nestjs-rabbitmq';
 import { Config } from '../../config';

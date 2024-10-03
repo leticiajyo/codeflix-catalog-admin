@@ -1,5 +1,5 @@
 import { AggregateRoot } from '../aggregate-root';
-import { IDomainEvent } from '../events/domain-event.interface';
+import { IDomainEvent } from '../events/event.interface';
 import { Uuid } from '../value-objects/uuid.vo';
 
 class StubEvent implements IDomainEvent {
