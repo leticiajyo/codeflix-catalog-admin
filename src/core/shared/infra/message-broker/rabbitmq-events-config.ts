@@ -1,4 +1,4 @@
-import { AudioVideoMediaReplaced } from '@core/video/domain/events/audio-video-media-replaced.event';
+import { AudioVideoMediaUploadedIntegrationEvent } from '@core/video/domain/events/audio-video-media-replaced.event';
 
 export type RabbitMQEventsConfig = {
   [key: string]: {
@@ -8,8 +8,8 @@ export type RabbitMQEventsConfig = {
 };
 
 export const RABBITMQ_EVENTS_CONFIG: RabbitMQEventsConfig = {
-  [AudioVideoMediaReplaced.name]: {
+  [AudioVideoMediaUploadedIntegrationEvent.name]: {
     exchange: 'amq.direct',
-    routingKey: AudioVideoMediaReplaced.name,
+    routingKey: AudioVideoMediaUploadedIntegrationEvent.name,
   },
 };

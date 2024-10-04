@@ -15,7 +15,6 @@ import { DomainEventMediator } from '../../core/shared/domain/events/domain-even
         return new ApplicationService(uow, domainEventMediator);
       },
       inject: ['UnitOfWork', DomainEventMediator],
-      scope: Scope.REQUEST,
     },
   ],
   exports: [ApplicationService],

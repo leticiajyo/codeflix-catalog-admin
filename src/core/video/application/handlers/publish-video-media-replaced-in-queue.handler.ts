@@ -6,12 +6,10 @@ import { OnEvent } from '@nestjs/event-emitter';
 export class PublishVideoMediaReplacedInQueueHandler
   implements IIntegrationEventHandler
 {
-  constructor(private messageBroker: IMessageBroker) {
-    console.log(messageBroker);
-  }
+  constructor(private messageBroker: IMessageBroker) {}
 
   @OnEvent(AudioVideoMediaUploadedIntegrationEvent.name)
   async handle(event: AudioVideoMediaUploadedIntegrationEvent): Promise<void> {
-    console.log(event);
+    await this.messageBroker.publishEvent(event);
   }
 }

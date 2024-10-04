@@ -1,5 +1,5 @@
-import { RabbitMQMessageBroker } from '@core/shared/infra/message-broker/rabbitmq';
 import { RABBITMQ_EVENTS_CONFIG } from '@core/shared/infra/message-broker/rabbitmq-events-config';
+import { RabbitMQMessageBroker } from '@core/shared/infra/message-broker/rabbitmq-message-broker';
 import { AmqpConnection, RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { DynamicModule } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';

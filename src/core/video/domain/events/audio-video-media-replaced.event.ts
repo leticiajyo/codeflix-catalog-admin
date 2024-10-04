@@ -47,8 +47,8 @@ export class AudioVideoMediaUploadedIntegrationEvent
     this.eventVersion = event.eventVersion;
     this.eventName = this.constructor.name;
     this.payload = {
-      videoId: event.aggregateId.id,
-      media: event.media.toJSON(),
+      resourceId: `${event.aggregateId.id}.${event.mediaType}`,
+      filePath: event.media.rawUrl,
     };
   }
 }
