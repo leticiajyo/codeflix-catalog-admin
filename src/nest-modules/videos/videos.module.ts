@@ -35,6 +35,7 @@ import { RabbitmqModule } from '../rabbitmq/rabbitmq.module';
     ...Object.values(VIDEOS_PROVIDERS.REPOSITORIES),
     ...Object.values(VIDEOS_PROVIDERS.USE_CASES),
     ...Object.values(VIDEOS_PROVIDERS.HANDLERS),
+    ...Object.values(VIDEOS_PROVIDERS.CONSUMERS),
   ],
 })
 export class VideosModule {}

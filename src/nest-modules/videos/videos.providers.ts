@@ -21,6 +21,8 @@ import { GENRES_PROVIDERS } from '../genres/genres.providers';
 import { UploadImageMediasUseCase } from '@core/video/application/use-cases/upload-image-medias/upload-image-medias.use-case';
 import { PublishVideoMediaReplacedInQueueHandler } from '@core/video/application/handlers/publish-video-media-replaced-in-queue.handler';
 import { IMessageBroker } from '@core/shared/application/message-broker.interface';
+import { VideoMediaConvertedConsumer } from '@core/video/application/consumers/video-media-converted.consumer';
+import { ModuleRef } from '@nestjs/core';
 
 export const REPOSITORIES = {
   VIDEO_REPOSITORY: {
@@ -162,8 +164,19 @@ export const HANDLERS = {
   },
 };
 
+export const CONSUMERS = {
+  VIDEO_MEDIA_CONVERTED_CONSUMER: {
+    provide: VideoMediaConvertedConsumer,
+    useFactory: (moduleRef: ModuleRef) => {
+      return new VideoMediaConvertedConsumer(moduleRef);
+    },
+    inject: [ModuleRef],
+  },
+};
+
 export const VIDEOS_PROVIDERS = {
   REPOSITORIES,
   USE_CASES,
   HANDLERS,
+  CONSUMERS,
 };
