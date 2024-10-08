@@ -45,7 +45,7 @@ export class AudioVideoMediaUploadedIntegrationEvent
   constructor(event: AudioVideoMediaReplaced) {
     this.occurredOn = event.occurredOn;
     this.eventVersion = event.eventVersion;
-    this.eventName = this.constructor.name;
+    this.eventName = 'AudioVideoMediaUploaded';
     this.payload = {
       resourceId: `${event.aggregateId.id}.${event.mediaType}`,
       filePath: event.media.rawUrl,

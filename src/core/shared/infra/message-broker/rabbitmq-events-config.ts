@@ -10,6 +10,6 @@ export type RabbitMQEventsConfig = {
 export const RABBITMQ_EVENTS_CONFIG: RabbitMQEventsConfig = {
   [AudioVideoMediaUploadedIntegrationEvent.name]: {
     exchange: 'amq.direct',
-    routingKey: AudioVideoMediaUploadedIntegrationEvent.name,
+    routingKey: 'videos.upload',
   },
 };
