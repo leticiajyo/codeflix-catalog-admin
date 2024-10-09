@@ -16,6 +16,10 @@ export class VideoMediaConvertedConsumer {
     routingKey: 'videos.convert',
     queue: 'video-converted',
     allowNonJsonMessages: true,
+    queueOptions: {
+      deadLetterExchange: 'dlx.exchange',
+      deadLetterRoutingKey: 'videos.convert',
+    },
   })
   async onProcessVideo(msg: {
     video: {
