@@ -13,6 +13,7 @@ import { ConsumeMessage, MessagePropertyHeaders } from 'amqplib';
 export class RabbitmqConsumeErrorFilter implements ExceptionFilter {
   readonly RETRY_COUNT_HEADER = 'x-retry-count';
   readonly MAX_RETRIES = 3;
+  readonly DELAY_IN_MS = 5000;
 
   readonly NON_RETRIABLE_ERRORS = [
     NotFoundError,
@@ -62,7 +63,7 @@ export class RabbitmqConsumeErrorFilter implements ExceptionFilter {
     messageHeaders[retryHeader] = messageHeaders[retryHeader]
       ? messageHeaders[retryHeader] + 1
       : 1;
-    messageHeaders['x-delay'] = 5000; // 5s
+    messageHeaders['x-delay'] = this.DELAY_IN_MS;
 
     return this.amqpConnection.publish(
       'direct.delayed',
