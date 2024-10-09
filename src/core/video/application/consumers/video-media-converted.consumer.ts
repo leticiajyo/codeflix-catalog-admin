@@ -1,18 +1,19 @@
 import { RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 import { ProcessAudioVideoMediasInput } from '../use-cases/process-audio-video-medias/process-audio-video-medias.input';
 import { AudioVideoMediaStatus } from '@core/shared/domain/value-objects/audio-video-media.vo';
-import { UseFilters, ValidationPipe } from '@nestjs/common';
+import { Injectable, UseFilters, ValidationPipe } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ProcessAudioVideoMediasUseCase } from '../use-cases/process-audio-video-medias/process-audio-video-medias.use-case';
 import { RabbitmqConsumeErrorFilter } from 'src/nest-modules/rabbitmq/filters/rabbitmq-consume-error.filter';
 
-@UseFilters(new RabbitmqConsumeErrorFilter())
+@UseFilters(RabbitmqConsumeErrorFilter)
+@Injectable()
 export class VideoMediaConvertedConsumer {
   // Me must use moduleRef.resolve because the use case has a dependency that is scoped request. It works for SCOPED and TRANSIENT.
   constructor(private moduleRef: ModuleRef) {}
 
   @RabbitSubscribe({
-    exchange: 'amq.direct',
+    exchange: 'direct.delayed',
     routingKey: 'videos.convert',
     queue: 'video-converted',
     allowNonJsonMessages: true,

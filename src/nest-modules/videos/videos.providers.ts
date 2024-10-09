@@ -164,15 +164,7 @@ export const HANDLERS = {
   },
 };
 
-export const CONSUMERS = {
-  VIDEO_MEDIA_CONVERTED_CONSUMER: {
-    provide: VideoMediaConvertedConsumer,
-    useFactory: (moduleRef: ModuleRef) => {
-      return new VideoMediaConvertedConsumer(moduleRef);
-    },
-    inject: [ModuleRef],
-  },
-};
+export const CONSUMERS = [VideoMediaConvertedConsumer];
 
 export const VIDEOS_PROVIDERS = {
   REPOSITORIES,
