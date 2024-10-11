@@ -22,7 +22,6 @@ import { UploadImageMediasUseCase } from '@core/video/application/use-cases/uplo
 import { PublishVideoMediaReplacedInQueueHandler } from '@core/video/application/handlers/publish-video-media-replaced-in-queue.handler';
 import { IMessageBroker } from '@core/shared/application/message-broker.interface';
 import { VideoMediaConvertedConsumer } from '@core/video/application/consumers/video-media-converted.consumer';
-import { ModuleRef } from '@nestjs/core';
 
 export const REPOSITORIES = {
   VIDEO_REPOSITORY: {
