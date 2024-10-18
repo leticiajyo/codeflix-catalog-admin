@@ -81,20 +81,29 @@ export const CONFIG_RABBITMQ_SCHEMA: Joi.StrictSchemaMap<CONFIG_RABBITMQ_SCHEMA_
     RABBITMQ_REGISTER_HANDLERS: Joi.boolean().required(),
   };
 
-type EVN_SCHEMA_TYPE = {
+type CONFIG_JWT_SCHEMA_TYPE = {
+  JWT_PUBLIC_KEY: string;
+  JWT_PRIVATE_KEY: string; // The private key is only used as an example, for prod we'll use Keycloak to generate tokens
+};
+
+export const CONFIG_JWT_SCHEMA: Joi.StrictSchemaMap<CONFIG_JWT_SCHEMA_TYPE> = {
+  JWT_PUBLIC_KEY: Joi.string().required(),
+  JWT_PRIVATE_KEY: Joi.string().optional(),
+};
+
+type ENV_SCHEMA_TYPE = {
   NODE_ENV: string;
 };
 
-export const CONFIG_ENV_SCHEMA: Joi.StrictSchemaMap<EVN_SCHEMA_TYPE> = {
-  NODE_ENV: Joi.string()
-    .valid('dev', 'stg', 'production', 'test', 'e2e')
-    .required(),
+export const CONFIG_ENV_SCHEMA: Joi.StrictSchemaMap<ENV_SCHEMA_TYPE> = {
+  NODE_ENV: Joi.string().valid('dev', 'stg', 'prod', 'test', 'e2e').required(),
 };
 
 export type CONFIG_SCHEMA_TYPE = DB_SCHEMA_TYPE &
   CONFIG_GOOGLE_SCHEMA_TYPE &
-  EVN_SCHEMA_TYPE &
-  CONFIG_RABBITMQ_SCHEMA_TYPE;
+  ENV_SCHEMA_TYPE &
+  CONFIG_RABBITMQ_SCHEMA_TYPE &
+  CONFIG_JWT_SCHEMA_TYPE;
 
 @Module({})
 export class ConfigModule extends NestConfigModule {
@@ -112,6 +121,7 @@ export class ConfigModule extends NestConfigModule {
         ...CONFIG_DB_SCHEMA,
         ...CONFIG_GOOGLE_SCHEMA,
         ...CONFIG_RABBITMQ_SCHEMA,
+        ...CONFIG_JWT_SCHEMA,
         ...CONFIG_ENV_SCHEMA,
       }),
       ...otherOptions,

@@ -9,6 +9,7 @@ import { EventModule } from './event/event.module';
 import { UseCaseModule } from './use-case/use-case.module';
 import { StorageModule } from './storage/storage.module';
 import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { RabbitmqModule } from './rabbitmq/rabbitmq.module';
     EventModule,
     UseCaseModule,
     RabbitmqModule.forRoot(),
+    AuthModule,
     CategoriesModule,
     CastMembersModule,
     GenresModule,

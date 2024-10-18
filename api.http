@@ -154,3 +154,25 @@ username=admin@user.com
 &password=admin
 &grant_type=password
 &client_id=codeflix-admin-frontend
+
+### Openid connect server configs
+GET http://host.docker.internal:8080/realms/codeflix/.well-known/openid-configuration
+
+### Certificates
+GET http://host.docker.internal:8080/realms/codeflix/protocol/openid-connect/certs
+
+
+###
+### Endpoint to generate token locally
+POST http://localhost:3000/auth
+Content-Type: application/json
+
+{
+    "email": "admin@user.com",
+    "password": "123456"
+}
+
+###
+GET http://localhost:3000/auth
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHVzZXIuY29tIiwibmFtZSI6InRlc3QiLCJpYXQiOjE3MjkyNjQ5MDAsImV4cCI6MTcyOTI2NDk2MH0.1_ZsATBNNuYhH3ycf9bAKhpay4ef83qq6SjRunTg-Is
