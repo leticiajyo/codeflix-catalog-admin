@@ -175,4 +175,4 @@ Content-Type: application/json
 ###
 GET http://localhost:3000/auth
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQHVzZXIuY29tIiwibmFtZSI6InRlc3QiLCJpYXQiOjE3MjkyNjQ5MDAsImV4cCI6MTcyOTI2NDk2MH0.1_ZsATBNNuYhH3ycf9bAKhpay4ef83qq6SjRunTg-Is
+Authorization: Bearer xxx

@@ -24,8 +24,12 @@ export class AuthGuard implements CanActivate {
     }
 
     try {
-      const payload = this.jwtService.verify(token, { secret: '123456' });
-      // const payload = this.jwtService.verify(token);
+      // // Option to generate token with symetric key
+      // const payload = this.jwtService.verify(token, { secret: '123456' });
+
+      // // Option to generate token with assymetric key or keycloak
+      const payload = this.jwtService.verify(token);
+
       request['user'] = payload;
       return true;
     } catch (e) {
