@@ -1,15 +1,16 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from './auth.guard';
 import { AuthController } from './auth.controller';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 
+@Global()
 @Module({
   // // Option to generate token with symetric key
   // imports: [
   //   JwtModule.register({
-  //     //global: true
+  //     // global: true
   //     secret: '123456',
   //     signOptions: { expiresIn: '60s' },
   //   }),
@@ -20,7 +21,6 @@ import { AuthService } from './auth.service';
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
         return {
-          //global: true,
           privateKey: configService.get('JWT_PRIVATE_KEY'),
           publicKey: configService.get('JWT_PUBLIC_KEY'),
           signOptions: {
@@ -29,6 +29,7 @@ import { AuthService } from './auth.service';
         };
       },
       inject: [ConfigService],
+      global: true,
     }),
   ],
   providers: [AuthGuard, AuthService],

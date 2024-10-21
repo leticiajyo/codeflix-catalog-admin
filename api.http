@@ -1,11 +1,16 @@
 ## valid uuid = 8f4b7b9c-3f7a-4b6c-8b0c-1c9c5b8b9b6a
 
+###
+@jwtToken = eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsiYWRtaW4tY2F0YWxvZyJdfSwiaWF0IjoxNzI5NTQ0NDExLCJleHAiOjE3Mjk2MzA4MTF9.MIQ5ej8Az9QXZRZqAgpWpIt62LPTpCBd-eCpXAs90x4D3CagIrwvEvVQm-aK95VDr2mbCSDoYKYGcPxZcyvek55iPlXKs1wTBN2MbkkpSdmeloTrmgN5yXN7IdRC-2BujP2c_ftLe5cnVL6dNE-IfAev6VLRH6jdaS7Treevo5IrZ4phk55_zk-VJJztGUEwKMdM4itumCBSdjHpTQmWSTsB9pE7J3rRKSHMc-Dxr_UsC2Nd3iFLo05EgOCaJjd0h6KS-OcrW0zDonSHgAjTd8DYKozUONDw7yiFdGQXXqLUrVMwVeMF0e5qugcyvVe6ZQJMzJKzYYQP6eVzU1E3EQ
+
+
 
 
 ### Create Category
 # @name createCategory
 POST http://localhost:3000/categories
 Content-Type: application/json
+Authorization: Bearer {{jwtToken}}
 
 {
     "name": "Category 1",
@@ -17,10 +22,11 @@ Content-Type: application/json
 
 ### Search Categories
 GET http://localhost:3000/categories
+Authorization: Bearer {{jwtToken}}
 
 ### Find One Category
 GET http://localhost:3000/categories/{{categoryId}}
-
+Authorization: Bearer {{jwtToken}}
 
 
 ### Create Genre
@@ -175,4 +181,4 @@ Content-Type: application/json
 ###
 GET http://localhost:3000/auth
 Content-Type: application/json
-Authorization: Bearer xxx
+Authorization: Bearer {{jwtToken}}
