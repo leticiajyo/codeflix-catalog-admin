@@ -10,6 +10,7 @@ import { CATEGORY_PROVIDERS } from 'src/nest-modules/categories/categories.provi
 
 describe('E2E Categories Controller', () => {
   const nestApp = startApp();
+
   describe('/categories/:id (GET)', () => {
     describe('should a response error when id is invalid or not found', () => {
       const arrange = [
@@ -35,6 +36,7 @@ describe('E2E Categories Controller', () => {
       test.each(arrange)('when id is $id', async ({ id, expected }) => {
         return request(nestApp.app.getHttpServer())
           .get(`/categories/${id}`)
+          .authenticate(nestApp.app)
           .expect(expected.statusCode)
           .expect(expected);
       });
@@ -49,6 +51,7 @@ describe('E2E Categories Controller', () => {
 
       const res = await request(nestApp.app.getHttpServer())
         .get(`/categories/${category.categoryId.id}`)
+        .authenticate(nestApp.app)
         .expect(200);
 
       const keyInResponse = GetCategoryFixture.keysInResponse;

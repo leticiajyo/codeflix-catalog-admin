@@ -33,6 +33,7 @@ describe('E2E Categories Controller', () => {
       test.each(arrange)('when id is $id', async ({ id, expected }) => {
         return request(appHelper.app.getHttpServer())
           .delete(`/categories/${id}`)
+          .authenticate(appHelper.app)
           .expect(expected.statusCode)
           .expect(expected);
       });
@@ -47,6 +48,7 @@ describe('E2E Categories Controller', () => {
 
       await request(appHelper.app.getHttpServer())
         .delete(`/categories/${category.categoryId.id}`)
+        .authenticate(appHelper.app)
         .expect(204);
 
       await expect(

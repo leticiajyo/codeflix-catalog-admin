@@ -30,6 +30,7 @@ describe('E2E Categories Controller', () => {
       test.each(arrange)('when body is $label', ({ value }) => {
         return request(appHelper.app.getHttpServer())
           .post('/categories')
+          .authenticate(appHelper.app)
           .send(value.sendData)
           .expect(400)
           .expect(value.expected);
@@ -47,6 +48,7 @@ describe('E2E Categories Controller', () => {
       test.each(arrange)('when body is $label', ({ value }) => {
         return request(appHelper.app.getHttpServer())
           .post('/categories')
+          .authenticate(appHelper.app)
           .send(value.sendData)
           .expect(422)
           .expect(value.expected);
@@ -61,6 +63,7 @@ describe('E2E Categories Controller', () => {
         async ({ sendData, expected }) => {
           const res = await request(appHelper.app.getHttpServer())
             .post('/categories')
+            .authenticate(appHelper.app)
             .send(sendData)
             .expect(201);
 

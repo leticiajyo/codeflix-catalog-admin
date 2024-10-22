@@ -29,6 +29,7 @@ import {
   AudioVideoMediaModel,
   AudioVideoMediaRelatedField,
 } from '@core/video/infra/db/sequelize/audio-video-media.model';
+import { AuthModule } from 'src/nest-modules/auth/auth.module';
 
 describe('Consume video converted event ', () => {
   let module: TestingModule;
@@ -43,6 +44,7 @@ describe('Consume video converted event ', () => {
         EventModule,
         UseCaseModule,
         RabbitmqModule.forRoot(),
+        AuthModule,
         VideosModule,
       ],
     })

@@ -10,6 +10,7 @@ import { VideosModule } from '../videos.module';
 import { AudioVideoMediaUploadedIntegrationEvent } from '@core/video/domain/events/audio-video-media-replaced.event';
 import { ConfigModule } from 'src/nest-modules/config/config.module';
 import { StorageModule } from 'src/nest-modules/storage/storage.module';
+import { AuthModule } from 'src/nest-modules/auth/auth.module';
 
 class RabbitmqModuleFake {
   static forRoot(): DynamicModule {
@@ -41,6 +42,7 @@ describe('Videos Module', () => {
         EventModule,
         UseCaseModule,
         RabbitmqModuleFake.forRoot(),
+        AuthModule,
         VideosModule,
       ],
     })

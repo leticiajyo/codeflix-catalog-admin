@@ -45,6 +45,7 @@ describe('CategoriesController (e2e)', () => {
         async ({ id, sendData, expected }) => {
           return request(nestApp.app.getHttpServer())
             .patch(`/categories/${id}`)
+            .authenticate(nestApp.app)
             .send(sendData)
             .expect(expected.statusCode)
             .expect(expected);
@@ -53,7 +54,7 @@ describe('CategoriesController (e2e)', () => {
     });
 
     describe('should a response error with 400 when request body is invalid', () => {
-      const app = startApp();
+      const nestApp = startApp();
       const invalidRequest = UpdateCategoryFixture.arrangeInvalidRequest();
       const arrange = Object.keys(invalidRequest).map((key) => ({
         label: key,
@@ -61,8 +62,9 @@ describe('CategoriesController (e2e)', () => {
       }));
 
       test.each(arrange)('when body is $label', ({ value }) => {
-        return request(app.app.getHttpServer())
+        return request(nestApp.app.getHttpServer())
           .patch(`/categories/${categoryId}`)
+          .authenticate(nestApp.app)
           .send(value.sendData)
           .expect(400)
           .expect(value.expected);
@@ -70,7 +72,7 @@ describe('CategoriesController (e2e)', () => {
     });
 
     describe('should a response error with 422 when throw EntityValidationError', () => {
-      const app = startApp();
+      const nestApp = startApp();
       const validationError =
         UpdateCategoryFixture.arrangeForEntityValidationError();
       const arrange = Object.keys(validationError).map((key) => ({
@@ -80,7 +82,7 @@ describe('CategoriesController (e2e)', () => {
       let categoryRepo: ICategoryRepository;
 
       beforeEach(() => {
-        categoryRepo = app.app.get<ICategoryRepository>(
+        categoryRepo = nestApp.app.get<ICategoryRepository>(
           CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
       });
@@ -88,8 +90,9 @@ describe('CategoriesController (e2e)', () => {
       test.each(arrange)('when body is $label', async ({ value }) => {
         const category = Category.fake().oneCategory().build();
         await categoryRepo.insert(category);
-        return request(app.app.getHttpServer())
+        return request(nestApp.app.getHttpServer())
           .patch(`/categories/${category.categoryId.id}`)
+          .authenticate(nestApp.app)
           .send(value.sendData)
           .expect(422)
           .expect(value.expected);
@@ -97,12 +100,12 @@ describe('CategoriesController (e2e)', () => {
     });
 
     describe('should update a category', () => {
-      const appHelper = startApp();
+      const nestApp = startApp();
       const arrange = UpdateCategoryFixture.arrangeForUpdate();
       let categoryRepo: ICategoryRepository;
 
       beforeEach(async () => {
-        categoryRepo = appHelper.app.get<ICategoryRepository>(
+        categoryRepo = nestApp.app.get<ICategoryRepository>(
           CATEGORY_PROVIDERS.REPOSITORIES.CATEGORY_REPOSITORY.provide,
         );
       });
@@ -113,8 +116,9 @@ describe('CategoriesController (e2e)', () => {
           const categoryCreated = Category.fake().oneCategory().build();
           await categoryRepo.insert(categoryCreated);
 
-          const res = await request(appHelper.app.getHttpServer())
+          const res = await request(nestApp.app.getHttpServer())
             .patch(`/categories/${categoryCreated.categoryId.id}`)
+            .authenticate(nestApp.app)
             .send(sendData)
             .expect(200);
 
