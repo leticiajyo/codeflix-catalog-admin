@@ -8,7 +8,7 @@ TBD
 
 ### Dev Container
 
-TBD
+This project uses Dev Containers for development with workspace folder home/node/app.
 
 ### Keycloak
 
